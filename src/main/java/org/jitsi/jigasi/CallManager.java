@@ -126,6 +126,7 @@ public class CallManager
         @Override
         public void run()
         {
+            logger.debug(("This is probably where the call out is initiated"));
             CallConference conference
                 = (call == null) ? null : call.getConference();
 
@@ -133,7 +134,7 @@ public class CallManager
                 : callees.entrySet())
             {
                 ProtocolProviderService pps = entry.getKey();
-
+                logger.debug("This is probably hhappening per entry.");
                 /*
                  * We'd like to allow specifying callees without specifying an
                  * associated ProtocolProviderService.
@@ -220,6 +221,7 @@ public class CallManager
                     {
                         for (String contact : contactArray)
                         {
+                            logger.debug("Is this where we call out?");
                             telephonyConferencing.inviteCalleeToCall(
                                 contact,
                                 ppsCall);
@@ -281,7 +283,7 @@ public class CallManager
             while (peers.hasNext())
             {
                 CallPeer peer = peers.next();
-
+                logger.debug("CallManager - Run - Iterating Peers");
                 if (video)
                 {
                     OperationSetVideoTelephony telephony
