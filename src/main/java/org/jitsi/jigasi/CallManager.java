@@ -56,6 +56,7 @@ public class CallManager
         Map<ProtocolProviderService, List<String>> callees,
         Call call)
     {
+        Console.Log("Sending invites");
         threadPool.submit(
             new InviteToConferenceCallThread(callees, call));
     }
@@ -128,6 +129,7 @@ public class CallManager
         @Override
         public void run()
         {
+            Console.Log("________I'M GOING TO MAKE A CALL NOW_____");
             Console.Log("This is probably where the call out is initiated");
             CallConference conference
                 = (call == null) ? null : call.getConference();
@@ -135,6 +137,7 @@ public class CallManager
             for(Map.Entry<ProtocolProviderService, List<String>> entry
                 : callees.entrySet())
             {
+                Console.Log("Look at all the stuff I'm calling: " + String.join(", ", entry.getValue()));
                 ProtocolProviderService pps = entry.getKey();
                 Console.Log("This is probably hhappening per entry.");
                 /*
@@ -143,9 +146,12 @@ public class CallManager
                  */
                 if (pps != null)
                 {
+                    
                     OperationSetBasicTelephony<?> basicTelephony
                         = pps.getOperationSet(OperationSetBasicTelephony.class);
 
+                       
+                    
                     if(basicTelephony == null)
                         continue;
                 }
@@ -284,10 +290,13 @@ public class CallManager
 
             while (peers.hasNext())
             {
+                Console.Log("I am answering calls!");
                 CallPeer peer = peers.next();
+                Console.Log("Peer address is: " + peer.getAddress());
                 Console.Log("CallManager - Run - Iterating Peers");
                 if (video)
                 {
+                    Console.Log("Video is enabled");
                     OperationSetVideoTelephony telephony
                         = pps.getOperationSet(OperationSetVideoTelephony.class);
 
@@ -305,6 +314,7 @@ public class CallManager
                 }
                 else
                 {
+                    Console.Log("Video is not enabled");
                     OperationSetBasicTelephony<?> telephony
                         = pps.getOperationSet(OperationSetBasicTelephony.class);
 
