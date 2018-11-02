@@ -27,6 +27,7 @@ import org.jitsi.meet.*;
 import org.jitsi.service.configuration.*;
 import org.jitsi.service.neomedia.*;
 import org.jitsi.util.*;
+import org.blaccspot.*;
 
 /**
  * FIXME: update description SIP gateway for Jitsi Videobridge conferences.
@@ -145,12 +146,7 @@ public class Main {
     public static void main(String[] args)
         throws ParseException
     {
-        logger.setLevelAll();
-        logger.debug("[TESTLOG] Debug enabled");
-        logger.info("[TESTLOG] Info enabled");
-        logger.warn("[TESTLOG] Warn enabled");
-        logger.error("[TESTLOG] error enabled");
-        logger.fatal("[TESTLOG] Falta enabled");
+        Console.Log("Init.......");
 
         // Parse the command-line arguments.
         CmdLine cmdLine = new CmdLine();

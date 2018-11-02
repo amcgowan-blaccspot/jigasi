@@ -24,6 +24,8 @@ import net.java.sip.communicator.util.*;
 import java.util.*;
 import java.util.concurrent.*;
 
+import org.blaccspot.Console;
+
 /**
  * FIXME: copied from Jitsi
  */
@@ -126,7 +128,7 @@ public class CallManager
         @Override
         public void run()
         {
-            logger.info(("[TESTLOG] This is probably where the call out is initiated"));
+            Console.Log("This is probably where the call out is initiated");
             CallConference conference
                 = (call == null) ? null : call.getConference();
 
@@ -134,7 +136,7 @@ public class CallManager
                 : callees.entrySet())
             {
                 ProtocolProviderService pps = entry.getKey();
-                logger.info("[TESTLOG] This is probably hhappening per entry.");
+                Console.Log("This is probably hhappening per entry.");
                 /*
                  * We'd like to allow specifying callees without specifying an
                  * associated ProtocolProviderService.
@@ -221,7 +223,7 @@ public class CallManager
                     {
                         for (String contact : contactArray)
                         {
-                            logger.info("[TESTLOG] Is this where we call out?");
+                            Console.Log("Is this where we call out?");
                             telephonyConferencing.inviteCalleeToCall(
                                 contact,
                                 ppsCall);
@@ -283,7 +285,7 @@ public class CallManager
             while (peers.hasNext())
             {
                 CallPeer peer = peers.next();
-                logger.info("[TESTLOG] CallManager - Run - Iterating Peers");
+                Console.Log("CallManager - Run - Iterating Peers");
                 if (video)
                 {
                     OperationSetVideoTelephony telephony
@@ -457,10 +459,10 @@ public class CallManager
                                                int    reasonCode,
                                                String reason)
     {
-        //if (logger.isDebugEnabled())
-        //{
-            logger.info("[TESTLOG] Hanging up :" + call, new Throwable());
-        //}
+        if (logger.isDebugEnabled())
+        {
+            logger.info("Hanging up :" + call, new Throwable());
+        }
 
         HangupCallThread hangupCallThread = new HangupCallThread(call);
 
@@ -561,7 +563,7 @@ public class CallManager
              * There is only an OperationSet which hangs up a CallPeer at a time
              * so prepare a list of all CallPeers to be hanged up.
              */
-            logger.info("[TESTLOG] Call manager run step");
+            Console.Log("Call manager run step");
             Set<CallPeer> peers = new HashSet<CallPeer>();
 
             if (call != null)
@@ -580,7 +582,7 @@ public class CallManager
 
             for (CallPeer peer : peers)
             {
-                logger.info("[TESTLOG] Telephony step");
+                Console.Log("Telephony step");
                 OperationSetBasicTelephony<?> basicTelephony
                     = peer.getProtocolProvider().getOperationSet(
                     OperationSetBasicTelephony.class);
