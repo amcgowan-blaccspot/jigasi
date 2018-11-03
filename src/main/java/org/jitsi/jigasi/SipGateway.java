@@ -20,6 +20,8 @@ package org.jitsi.jigasi;
 import net.java.sip.communicator.service.protocol.*;
 import net.java.sip.communicator.service.protocol.event.*;
 import net.java.sip.communicator.util.*;
+
+import org.blaccspot.Console;
 import org.jitsi.jigasi.util.*;
 import org.osgi.framework.*;
 
@@ -103,7 +105,7 @@ public class SipGateway
         ProtocolProviderService pps = evt.getProvider();
 
         logger.info("REG STATE CHANGE " + pps + " -> " + evt);
-
+        Console.Log("REG STATE CHANGE " + pps + " -> " + evt);
         if (evt.getNewState().equals(RegistrationState.REGISTERED))
         {
             fireGatewayReady();

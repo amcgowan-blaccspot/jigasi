@@ -22,6 +22,8 @@ import net.java.sip.communicator.service.protocol.*;
 import net.java.sip.communicator.service.protocol.event.*;
 import net.java.sip.communicator.service.protocol.media.*;
 import net.java.sip.communicator.util.Logger;
+
+import org.blaccspot.Console;
 import org.jitsi.jigasi.stats.*;
 import org.jitsi.jigasi.util.*;
 import org.jitsi.service.neomedia.*;
@@ -210,6 +212,8 @@ public class SipGatewaySession
     public SipGatewaySession(SipGateway gateway, CallContext callContext)
     {
         super(gateway, callContext);
+        Console.Log("Creating sip gateway session");
+
         this.sipProvider = gateway.getSipProvider();
         this.jitsiMeetTools
             = sipProvider.getOperationSet(
@@ -372,9 +376,10 @@ public class SipGatewaySession
     Exception onConferenceCallStarted(Call jvbConferenceCall)
     {
         this.jvbConferenceCall = jvbConferenceCall;
-
+        Console.Log("onConferenceCallStarted");
         if (destination == null)
         {
+            Console.Log("accepting call");
             CallManager.acceptCall(call);
         }
         else
@@ -407,6 +412,7 @@ public class SipGatewaySession
                     String roomName = getJvbRoomName();
                     if(roomName != null)
                     {
+                        Console.Log("sending room name: "+roomName);
                         Call call = callEvent.getSourceCall();
                         call.setData("EXTRA_HEADER_NAME.1",
                             sipProvider.getAccountID()
@@ -427,6 +433,7 @@ public class SipGatewaySession
             });
             try
             {
+                Console.Log("Calling: " + destination);
                 this.call = tele.createCall(destination);
                 call.setData(CallContext.class,  super.callContext);
 

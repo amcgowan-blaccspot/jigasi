@@ -19,6 +19,9 @@ package org.jitsi.jigasi.xmpp;
 
 import net.java.sip.communicator.impl.protocol.jabber.extensions.rayo.RayoIqProvider.*;
 import net.java.sip.communicator.util.*;
+
+import org.blaccspot.*;
+
 import org.jitsi.jigasi.*;
 import org.jitsi.service.configuration.*;
 import org.jivesoftware.smack.packet.*;
@@ -188,6 +191,8 @@ public class CallControl
         logger.info(
             "Got dial request " + from + " -> " + to + " room: " + roomName);
 
+        Console.Log("Got dial request " + from + " -> " + to + " room: " + roomName);
+
         AbstractGatewaySession session = null;
         if(TRANSCRIPTION_DIAL_IQ_DESTINATION.equals(to))
         {
@@ -210,7 +215,7 @@ public class CallControl
                 return RefIq.createResult(iq,
                     XMPPError.Condition.not_acceptable.toString());
             }
-
+            Console.Log("Dialing out!!!!!!");
             session = sipGateway.createOutgoingCall(ctx);
         }
 

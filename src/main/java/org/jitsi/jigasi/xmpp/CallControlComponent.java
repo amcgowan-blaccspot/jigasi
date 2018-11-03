@@ -20,6 +20,8 @@ package org.jitsi.jigasi.xmpp;
 import net.java.sip.communicator.impl.protocol.jabber.extensions.rayo.RayoIqProvider.*;
 import net.java.sip.communicator.service.protocol.*;
 import net.java.sip.communicator.util.*;
+
+import org.blaccspot.Console;
 import org.jitsi.jigasi.*;
 import org.jitsi.meet.*;
 import org.jitsi.service.configuration.*;
@@ -108,10 +110,12 @@ public class CallControlComponent
     public void start(BundleContext bundleContext)
         throws Exception
     {
+        Console.Log("Initializing sip gateway");
         SipGateway sipGateway
                 = ServiceUtils.getService(
                 bundleContext, SipGateway.class);
 
+        Console.Log("Initializing transcription gateway");
         TranscriptionGateway transcriptionGateway
                 = ServiceUtils.getService(
                 bundleContext, TranscriptionGateway.class);
@@ -283,6 +287,7 @@ public class CallControlComponent
     protected IQ handleIQSetImpl(IQ iq)
         throws Exception
     {
+
         IQ resultIQ = handleIQ(iq);
 
         return (resultIQ == null) ? super.handleIQSetImpl(iq) : resultIQ;
@@ -324,6 +329,9 @@ public class CallControlComponent
             {
                 if (smackIq instanceof DialIq)
                 {
+                    Console.Log("Incoming iq");
+                    Console.Log(iq.toString());
+                    Console.Log("Got Dial Iq!");
                     resultIQ = callControl.handleDialIq((DialIq)smackIq, ctx,
                         null);
                 }

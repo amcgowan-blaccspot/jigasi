@@ -21,6 +21,8 @@ import net.java.sip.communicator.impl.protocol.jabber.extensions.jibri.*;
 import net.java.sip.communicator.service.protocol.*;
 import net.java.sip.communicator.service.protocol.event.*;
 import net.java.sip.communicator.util.*;
+
+import org.blaccspot.Console;
 import org.jivesoftware.smack.packet.*;
 
 import java.util.*;
@@ -95,6 +97,7 @@ public abstract class AbstractGatewaySession
         }
 
         jvbConference = new JvbConference(this, callContext);
+        Console.Log("Outgoing call creating JVB");
         jvbConference.start();
     }
 
