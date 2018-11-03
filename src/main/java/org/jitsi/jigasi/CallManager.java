@@ -41,8 +41,10 @@ public class CallManager
 
     public synchronized static void acceptCall(Call incomingCall)
     {
+        Console.Log("I'm accepting a call. I normally set video to false as a hardcoded thing.... Why?");
+        Console.Log("But... we are changing that... so lets set it to true... and see what hhappens");
         threadPool.submit(
-            new AnswerCallThread(incomingCall, null, false));
+            new AnswerCallThread(incomingCall, null, true));
     }
 
     /**
@@ -297,6 +299,7 @@ public class CallManager
                 if (video)
                 {
                     Console.Log("Video is enabled");
+                    Console.Log("Because of chhanging a hardcode flag... thhis could blow up?");
                     OperationSetVideoTelephony telephony
                         = pps.getOperationSet(OperationSetVideoTelephony.class);
 
