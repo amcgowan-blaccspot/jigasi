@@ -401,6 +401,27 @@ public class SipGatewaySession
 
             // Make an outgoing call
             //final OperationSetBasicTelephony
+
+            // we need both the basic telephony and video telephony. 
+            // The sipProvider has all of the operation sets instantiated
+            // to the concrete implementation classes. 
+            // The VideoTelephhony class is instantiated with the 
+            // basicTelephony as a component. This is a protected
+            // property, but the same instance is used in the map
+            // of interfaces to concrete classes in the provider. 
+            // 
+            // So, step 1, hook the same listners that are normally
+            // hooked to the baisc telephony class. Add additional
+            // listeners to the video class. Use the video class
+            // to instantiate the call, which will use the basic
+            // telephony class to create the underlying connection. 
+            
+            
+
+
+
+
+
             Console.Log("Loading basic telephhony");
             final OperationSetBasicTelephony teleBasic
                 = sipProvider.getOperationSet(OperationSetBasicTelephony.class);
@@ -408,45 +429,16 @@ public class SipGatewaySession
             Console.Log("Loaded tele basic: " + teleBasic);
 
             Console.Log("Attempting to load video tele");
-            final OperationSetVideoTelephonySipImpl tele
+            final OperationSetVideoTelephony teleVideo
                 = sipProvider.getOperationSet(
-                        OperationSetVideoTelephonySipImpl.class);
+                        OperationSetVideoTelephony.class);
 
-            Console.Log("Loaded basic video: " + tele);
+            Console.Log("I now have access to basic and video tele. Video tele is using baisc");
             // add listener to detect call creation, and add extra headers
             // before inviting, and remove the listener when job is done
 
-            Console.Log("This is where we need to implement the video telephony listener");
-
-            Console.Log("I need a peer - will naively get the first one?");
-            Console.Log("I have " + this.call.getCallPeerCount() + " peers");
-            
-            CallPeer firstPeer = this.call.getCallPeers().next();
-            Console.Log("FirstPeer: " + firstPeer.getAddress());
-
-            tele.addVideoListener(firstPeer, new VideoListener(){
-            
-                @Override
-                public void videoUpdate(VideoEvent event) {
-                    Console.Log("Video update event");
-                }
-            
-                @Override
-                public void videoRemoved(VideoEvent event) {
-                    Console.Log("Video removed event");
-                }
-            
-                @Override
-                public void videoAdded(VideoEvent event) {
-                    Console.Log("Video added event");   
-                }
-            });
-
-            
-
-            /*
-
-            tele.addCallListener(new CallListener()
+            Console.Log("Adding basic listener so we can hook into the call creation and make sure the correct room is sent.");
+            teleBasic.addCallListener(new CallListener()
             {
                 @Override
                 public void incomingCallReceived(CallEvent callEvent)
@@ -456,10 +448,12 @@ public class SipGatewaySession
                 public void outgoingCallCreated(CallEvent callEvent)
                 {
                     String roomName = getJvbRoomName();
+                    Call call = callEvent.getSourceCall();
+
                     if(roomName != null)
                     {
                         Console.Log("sending room name: "+roomName);
-                        Call call = callEvent.getSourceCall();
+                        
                         call.setData("EXTRA_HEADER_NAME.1",
                             sipProvider.getAccountID()
                                 .getAccountPropertyString(
@@ -468,21 +462,50 @@ public class SipGatewaySession
                         call.setData("EXTRA_HEADER_VALUE.1", roomName);
                     }
 
-                    tele.removeCallListener(this);
+                    Console.Log("I am not sure if this is the right place to add this. Not sure if we need it or not.");
+                    
+                    Console.Log("I will add the listener for all peers and see what happens");
+                    Iterator<? extends CallPeer> peers = call.getCallPeers();
+                    if (peers != null) {
+                        while (peers.hasNext()) {
+                            CallPeer peer = peers.next();
+                            Console.Log("Adding video listener for peer: " + peer.toString());
+                            if (peer != null) {
+                                teleVideo.addVideoListener(peer, new VideoListener(){
+                                    @Override
+                                    public void videoUpdate(VideoEvent event) {
+                                        Console.Log("Video update event");
+                                    }
+                                
+                                    @Override
+                                    public void videoRemoved(VideoEvent event) {
+                                        Console.Log("Video removed event");
+                                    }
+                                
+                                    @Override
+                                    public void videoAdded(VideoEvent event) {
+                                        Console.Log("Video added event");   
+                                    }
+                                });
+                            }
+
+                        }
+                    }
+
+                    teleBasic.removeCallListener(this);
                 }
 
                 @Override
                 public void callEnded(CallEvent callEvent)
                 {
-                    tele.removeCallListener(this);
+                    teleBasic.removeCallListener(this);
                 }
             });
-            */
 
             try
             {
                 Console.Log("Calling: " + destination);
-                this.call = tele.createVideoCall(destination);
+                this.call = teleVideo.createVideoCall(destination);
                 call.setData(CallContext.class,  super.callContext);
 
                 peerStateListener = new CallPeerListener(this.call);
