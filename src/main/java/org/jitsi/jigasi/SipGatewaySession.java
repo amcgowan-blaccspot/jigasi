@@ -18,6 +18,7 @@
 package org.jitsi.jigasi;
 
 import net.java.sip.communicator.impl.protocol.jabber.extensions.jibri.*;
+import net.java.sip.communicator.impl.protocol.sip.OperationSetVideoTelephonySipImpl;
 import net.java.sip.communicator.service.protocol.*;
 import net.java.sip.communicator.service.protocol.event.*;
 import net.java.sip.communicator.service.protocol.media.*;
@@ -407,9 +408,9 @@ public class SipGatewaySession
             Console.Log("Loaded tele basic: " + teleBasic);
 
             Console.Log("Attempting to load video tele");
-            final OperationSetVideoTelephony tele
+            final OperationSetVideoTelephonySipImpl tele
                 = sipProvider.getOperationSet(
-                        OperationSetVideoTelephony.class);
+                        OperationSetVideoTelephonySipImpl.class);
 
             Console.Log("Loaded basic video: " + tele);
             // add listener to detect call creation, and add extra headers

@@ -26,6 +26,8 @@ import net.java.sip.communicator.service.gui.*;
 import net.java.sip.communicator.service.protocol.*;
 import net.java.sip.communicator.service.shutdown.*;
 import net.java.sip.communicator.util.*;
+
+import org.blaccspot.Console;
 import org.jitsi.jigasi.health.*;
 import org.jitsi.jigasi.stats.*;
 import org.jitsi.jigasi.xmpp.*;
@@ -209,12 +211,18 @@ public class JigasiBundleActivator
                     osgiContext,
                     ProtocolProviderService.class);
 
+        Console.Log("If we want to extend, we would have to add another ref to the collection here");
+
         for (ServiceReference<ProtocolProviderService> ref : refs)
         {
             ProtocolProviderService pps = osgiContext.getService(ref);
 
+            Console.Log("Looking for provider: " + ProtocolNames.SIP);
+            Console.Log("Have name: " + pps.getProtocolName());
+
             if (ProtocolNames.SIP.equals(pps.getProtocolName()))
             {
+                Console.Log("setting thhe sip gateway provider");
                 if (sipGateway != null)
                     sipGateway.setSipProvider(pps);
             }
