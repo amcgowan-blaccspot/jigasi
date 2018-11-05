@@ -95,7 +95,7 @@ public class SipGateway
         this.sipProvider = sipProvider;
 
         initProvider(sipProvider);
-
+Console.Log("Sip provider being set");
         new RegisterThread(sipProvider).start();
     }
 
@@ -146,6 +146,7 @@ public class SipGateway
 
         OperationSetBasicTelephony telephony = pps.getOperationSet(
             OperationSetBasicTelephony.class);
+Console.Log("Provider being initted");
 
         telephony.addCallListener(callListener);
     }
@@ -170,6 +171,7 @@ public class SipGateway
     public SipGatewaySession createOutgoingCall(CallContext ctx)
     {
         SipGatewaySession outgoingSession = new SipGatewaySession(this, ctx);
+        
         outgoingSession.addListener(this);
         outgoingSession.createOutgoingCall();
 
@@ -184,7 +186,7 @@ public class SipGateway
         {
             synchronized (syncRoot)
             {
-
+                Console.Log("This is a place where stuff is happening");
                 Call call = event.getSourceCall();
 
                 logger.info("Incoming call received...");
@@ -207,11 +209,14 @@ public class SipGateway
         }
 
         @Override
-        public void outgoingCallCreated(CallEvent event) { }
+        public void outgoingCallCreated(CallEvent event) {
+            Console.Log("Outgoing call created. Should do something here");
+         }
 
         @Override
         public void callEnded(CallEvent event)
         {
+            Console.Log("Call ended");
             // FIXME: is it required ?
             //sipCallEnded();
         }

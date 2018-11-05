@@ -26,6 +26,8 @@ import net.java.sip.communicator.service.protocol.jabber.*;
 import net.java.sip.communicator.service.protocol.media.*;
 import net.java.sip.communicator.util.Logger;
 import net.java.sip.communicator.util.*;
+
+import org.blaccspot.Console;
 import org.jitsi.jigasi.stats.*;
 import org.jitsi.jigasi.util.*;
 import org.jitsi.jigasi.xmpp.*;
@@ -111,7 +113,7 @@ public class JvbConference
     {
         meetTools.addSupportedFeature(SIP_GATEWAY_FEATURE_NAME);
         meetTools.addSupportedFeature(DTMF_FEATURE_NAME);
-
+Console.Log("Checking supported features...");
         // Remove ICE support from features list ?
         if (JigasiBundleActivator.getConfigurationService()
                 .getBoolean(SipGateway.P_NAME_DISABLE_ICE, false))
@@ -120,6 +122,8 @@ public class JvbConference
                     "urn:xmpp:jingle:transports:ice-udp:1");
 
             logger.info("ICE feature will not be advertised");
+
+            Console.Log("Ice disabled");
         }
     }
 
@@ -256,6 +260,7 @@ public class JvbConference
      */
     private void advertisePeerSSRCs(CallPeer peer)
     {
+        Console.Log("Advertising pper SSRCs");
         String audioSSRC = getPeerSSRCforMedia(peer,
                                                MediaType.AUDIO);
         String videoSSRC = getPeerSSRCforMedia(peer,
@@ -373,20 +378,29 @@ public class JvbConference
      */
     private String getPeerSSRCforMedia(CallPeer peer, MediaType mediaType)
     {
-        if (!(peer instanceof MediaAwareCallPeer))
+        Console.Log("trying to get media");
+        if (!(peer instanceof MediaAwareCallPeer)) {
+            Console.Log("The peer " + peer.toString() + " is not a media aware peer for " + mediaType.toString());
             return null;
+        }
+
+        Console.Log("Peer is a media aware call peer");
 
         MediaAwareCallPeer peerMedia = (MediaAwareCallPeer) peer;
 
         CallPeerMediaHandler mediaHandler
             = peerMedia.getMediaHandler();
-        if (mediaHandler == null)
+        if (mediaHandler == null) {
+            Console.Log("The peer " + peer.toString() + " does not have a media handler for " + mediaType.toString());
             return null;
+        }
 
         MediaStream stream = mediaHandler.getStream(mediaType);
-        if (stream == null)
+        if (stream == null) {
+            Console.Log("Could not get the stream from peer: " + peer.toString() + " for " + mediaType.toString());
             return null;
-
+        }
+Console.Log("We got everything we need for peer " + peer.toString());
         return Long.toString(stream.getLocalSourceID());
     }
 
@@ -400,6 +414,8 @@ public class JvbConference
             logger.error("Already started !");
             return;
         }
+
+        Console.Log("Starting JVB");
 
         Localpart resourceIdentifier = getResourceIdentifier();
 

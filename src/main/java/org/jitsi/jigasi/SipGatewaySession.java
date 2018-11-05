@@ -222,6 +222,7 @@ public class SipGatewaySession
             = sipProvider.getOperationSet(
                     OperationSetJitsiMeetTools.class);
 
+
         // check for custom header name for room pass header
         roomPassHeaderName = sipProvider.getAccountID()
             .getAccountPropertyString(
@@ -267,6 +268,8 @@ public class SipGatewaySession
         }
 
         this.destination = callContext.getDestination();
+
+        Console.Log("Creating outgoing call. Connecting to MUC");
 
         // connect to muc
         super.createOutgoingCall();
@@ -380,6 +383,9 @@ public class SipGatewaySession
     Exception onConferenceCallStarted(Call jvbConferenceCall)
     {
         this.jvbConferenceCall = jvbConferenceCall;
+        Console.Log("Want to make sure it is jvb");
+        Console.Log("JVB: " + jvbConferenceCall.getConference().isJitsiVideobridge());
+        
         Console.Log("onConferenceCallStarted");
         if (destination == null)
         {
