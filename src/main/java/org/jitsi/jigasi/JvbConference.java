@@ -601,6 +601,7 @@ Console.Log("We got everything we need for peer " + peer.toString());
 
     private void joinConferenceRoom()
     {
+        Console.Log("Joining conference room");
         // Advertise gateway feature before joining
         addSupportedFeatures(
                 xmppProvider.getOperationSet(OperationSetJitsiMeetTools.class));
