@@ -17,6 +17,11 @@
  */
 package org.jitsi.jigasi;
 
+import net.java.sip.communicator.impl.protocol.jabber.CallPeerJabberImpl;
+import net.java.sip.communicator.impl.protocol.jabber.OperationSetVideoTelephonyJabberImpl;
+import net.java.sip.communicator.impl.protocol.sip.CallPeerMediaHandlerSipImpl;
+import net.java.sip.communicator.impl.protocol.sip.CallPeerSipImpl;
+import net.java.sip.communicator.impl.protocol.sip.OperationSetVideoTelephonySipImpl;
 import net.java.sip.communicator.service.protocol.*;
 import net.java.sip.communicator.service.protocol.media.*;
 import net.java.sip.communicator.util.*;
@@ -287,13 +292,15 @@ public class CallManager
             if (existingCall != null)
                 call.setConference(existingCall.getConference());
 
+
+
             ProtocolProviderService pps = call.getProtocolProvider();
             Iterator<? extends CallPeer> peers = call.getCallPeers();
 
             while (peers.hasNext())
             {
                 Console.Log("I am answering calls!");
-                CallPeer peer = peers.next();
+                CallPeerSipImpl peer = (CallPeerSipImpl)peers.next();
                 Console.Log("Peer address is: " + peer.getAddress());
                 Console.Log("CallManager - Run - Iterating Peers");
                 if (video)
@@ -305,11 +312,22 @@ public class CallManager
 
                     try
                     {
+                        
                         Console.Log("Is it strange that we are dailing out, but it actually hits answer call.");
                         Console.Log("You can see these logs when it's still ringing on the other end. ");
                         Console.Log("");
                         Console.Log("");
+                        
+                        CallPeerMediaHandlerSipImpl handler = peer.getMediaHandler();
+
+                        /* enable video if it is a video call */
+                        handler.setLocalVideoTransmissionEnabled(true);
+                        
+
+
                         telephony.answerVideoCallPeer(peer);
+
+
                     }
                     catch (OperationFailedException ofe)
                     {
