@@ -305,6 +305,10 @@ public class CallManager
 
                     try
                     {
+                        Console.Log("Is it strange that we are dailing out, but it actually hits answer call.");
+                        Console.Log("You can see these logs when it's still ringing on the other end. ");
+                        Console.Log("");
+                        Console.Log("");
                         telephony.answerVideoCallPeer(peer);
                     }
                     catch (OperationFailedException ofe)

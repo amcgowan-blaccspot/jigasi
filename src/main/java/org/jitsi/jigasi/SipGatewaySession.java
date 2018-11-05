@@ -28,6 +28,8 @@ import org.jitsi.jigasi.stats.*;
 import org.jitsi.jigasi.util.*;
 import org.jitsi.service.neomedia.*;
 import org.jitsi.util.*;
+import org.jitsi.util.event.VideoEvent;
+import org.jitsi.util.event.VideoListener;
 import org.jivesoftware.smack.packet.*;
 
 import java.text.*;
@@ -341,6 +343,7 @@ public class SipGatewaySession
         // Incoming SIP connection mode sets common conference here
         if (destination == null)
         {
+            Console.Log("No destination?");
             call.setConference(incomingCall.getConference());
 
             boolean useTranslator = incomingCall.getProtocolProvider()
@@ -384,6 +387,7 @@ public class SipGatewaySession
         }
         else
         {
+            Console.Log("It's me... I'm the one that kicks it off");
             //sendPresenceExtension(
               //  createPresenceExtension(
                 //    SipGatewayExtension.STATE_RINGING, null));
@@ -395,11 +399,52 @@ public class SipGatewaySession
             //}
 
             // Make an outgoing call
-            final OperationSetBasicTelephony tele
+            //final OperationSetBasicTelephony
+            Console.Log("Loading basic telephhony");
+            final OperationSetBasicTelephony teleBasic
+                = sipProvider.getOperationSet(OperationSetBasicTelephony.class);
+
+            Console.Log("Loaded tele basic: " + teleBasic);
+
+            Console.Log("Attempting to load video tele");
+            final OperationSetVideoTelephony tele
                 = sipProvider.getOperationSet(
-                        OperationSetBasicTelephony.class);
+                        OperationSetVideoTelephony.class);
+
+            Console.Log("Loaded basic video: " + tele);
             // add listener to detect call creation, and add extra headers
             // before inviting, and remove the listener when job is done
+
+            Console.Log("This is where we need to implement the video telephony listener");
+
+            Console.Log("I need a peer - will naively get the first one?");
+            Console.Log("I have " + this.call.getCallPeerCount() + " peers");
+            
+            CallPeer firstPeer = this.call.getCallPeers().next();
+            Console.Log("FirstPeer: " + firstPeer.getAddress());
+
+            tele.addVideoListener(firstPeer, new VideoListener(){
+            
+                @Override
+                public void videoUpdate(VideoEvent event) {
+                    Console.Log("Video update event");
+                }
+            
+                @Override
+                public void videoRemoved(VideoEvent event) {
+                    Console.Log("Video removed event");
+                }
+            
+                @Override
+                public void videoAdded(VideoEvent event) {
+                    Console.Log("Video added event");   
+                }
+            });
+
+            
+
+            /*
+
             tele.addCallListener(new CallListener()
             {
                 @Override
@@ -431,10 +476,12 @@ public class SipGatewaySession
                     tele.removeCallListener(this);
                 }
             });
+            */
+
             try
             {
                 Console.Log("Calling: " + destination);
-                this.call = tele.createCall(destination);
+                this.call = tele.createVideoCall(destination);
                 call.setData(CallContext.class,  super.callContext);
 
                 peerStateListener = new CallPeerListener(this.call);
