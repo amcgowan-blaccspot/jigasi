@@ -246,10 +246,12 @@ public class JigasiBundleActivator
     @Override
     public void serviceChanged(ServiceEvent serviceEvent)
     {
+        Console.Log("service changed event");
         if (serviceEvent.getType() != ServiceEvent.REGISTERED)
         {
             return;
         }
+
 
         ServiceReference<?> ref = serviceEvent.getServiceReference();
         Object service = osgiContext.getService(ref);
@@ -270,11 +272,14 @@ public class JigasiBundleActivator
             RecordingStatus.NAMESPACE,
             new DefaultPacketExtensionProvider<>(RecordingStatus.class)
         );
-
+        Console.Log("Is this where the sip gateway is set?");
         ProtocolProviderService pps = (ProtocolProviderService) service;
         if (sipGateway != null && sipGateway.getSipProvider() == null &&
             ProtocolNames.SIP.equals(pps.getProtocolName()))
         {
+            Console.Log("Set sip service provider");
+            Console.Log(pps.toString());
+            Console.Log(pps.getClass().getName());
             sipGateway.setSipProvider(pps);
         }
     }
