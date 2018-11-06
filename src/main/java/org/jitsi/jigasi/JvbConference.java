@@ -1037,6 +1037,8 @@ Console.Log("We got everything we need for peer " + peer.toString());
                 macp.getCall().setVideoDevice(device, MediaUseCase.ANY);
 
             } catch (Exception e) {
+                Console.Log(e.getMessage());
+                Console.Log(e.toString());
                 Console.Log("Could not allow video");
             }
             macp.getMediaHandler().setLocalVideoTransmissionEnabled(true);
