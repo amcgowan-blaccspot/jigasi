@@ -300,7 +300,7 @@ public class CallManager
             while (peers.hasNext())
             {
                 Console.Log("I am answering calls!");
-                CallPeerSipImpl peer = (CallPeerSipImpl)peers.next();
+                CallPeer peer = peers.next();
                 Console.Log("Peer address is: " + peer.getAddress());
                 Console.Log("CallManager - Run - Iterating Peers");
                 if (video)
@@ -318,10 +318,10 @@ public class CallManager
                         Console.Log("");
                         Console.Log("");
                         
-                        CallPeerMediaHandlerSipImpl handler = peer.getMediaHandler();
+                        //CallPeerMediaHandlerSipImpl handler = peer.getMediaHandler();
 
                         /* enable video if it is a video call */
-                        handler.setLocalVideoTransmissionEnabled(true);
+                        //handler.setLocalVideoTransmissionEnabled(true);
                         
 
 
