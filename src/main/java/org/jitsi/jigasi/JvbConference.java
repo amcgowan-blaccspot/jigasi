@@ -1032,8 +1032,8 @@ Console.Log("We got everything we need for peer " + peer.toString());
                 macp.setLocalVideoAllowed(true);
                 MediaDevice device = macp.getCall().getDefaultDevice(MediaType.VIDEO);
                 Console.Log("The device: " + device.toString());
-                Console.Log("Format: " + device.getFormat().toString());
-                Console.Log("Direction: " + device.getDirection().name());
+                //Console.Log("Format: " + device.getFormat().toString());
+                //Console.Log("Direction: " + device.getDirection().name());
                 macp.getCall().setVideoDevice(device, MediaUseCase.ANY);
 
             } catch (Exception e) {
