@@ -124,6 +124,8 @@ Console.Log("Checking supported features...");
             logger.info("ICE feature will not be advertised");
 
             Console.Log("Ice disabled");
+        } else {
+            Console.Log("ICE Enabled");
         }
     }
 
@@ -247,6 +249,8 @@ Console.Log("Checking supported features...");
      */
     public JvbConference(AbstractGatewaySession gatewaySession, CallContext ctx)
     {
+        Console.Log("JVB Conference constructor");
+
         this.gatewaySession = gatewaySession;
         this.callContext = ctx;
 
@@ -301,6 +305,8 @@ Console.Log("Checking supported features...");
 
     private Localpart getResourceIdentifier()
     {
+        Console.Log("JVB Getting resource identifier");
+
         Localpart resourceIdentifier = null;
         if (JigasiBundleActivator.getConfigurationService()
             .getBoolean(P_NAME_USE_SIP_USER_AS_XMPP_RESOURCE, false))
@@ -442,6 +448,8 @@ Console.Log("We got everything we need for peer " + peer.toString());
 
         for (ServiceReference<ProtocolProviderService> serviceRef : providers)
         {
+            Console.Log("Checking protocol candidates");
+
             ProtocolProviderService candidate
                 = JigasiBundleActivator.osgiContext.getService(serviceRef);
 
@@ -931,6 +939,7 @@ Console.Log("We got everything we need for peer " + peer.toString());
         @Override
         public void incomingCallReceived(CallEvent event)
         {
+            Console.Log("JVB Incoming call received");
             CallPeer peer = event.getSourceCall().getCallPeers().next();
             String peerAddress;
             if (peer == null || peer.getAddress() == null)
@@ -997,9 +1006,11 @@ Console.Log("We got everything we need for peer " + peer.toString());
                     "CallPeerConferenceListener because jvbCall is" +
                     " null");            }
 
+            Console.Log("Hole punching");
             // disable hole punching jvb
             if (peer instanceof MediaAwareCallPeer)
             {
+                Console.Log("Preventing a hole punch");
                 ((MediaAwareCallPeer)peer).getMediaHandler()
                     .setDisableHolePunching(true);
             }
@@ -1037,7 +1048,9 @@ Console.Log("We got everything we need for peer " + peer.toString());
         }
 
         @Override
-        public void outgoingCallCreated(CallEvent event) { }
+        public void outgoingCallCreated(CallEvent event) {
+            Console.Log("JVB: Outgoing call created");
+        }
 
         @Override
         public void callEnded(CallEvent event) { }
@@ -1076,6 +1089,7 @@ Console.Log("We got everything we need for peer " + peer.toString());
             CallContext ctx,
             String resourceName)
     {
+        Console.Log("JVB Some temp thing being done");
         HashMap<String, String> properties = new HashMap<>();
 
         String userID = resourceName + "@" + ctx.getDomain();
@@ -1225,6 +1239,7 @@ Console.Log("We got everything we need for peer " + peer.toString());
     @Override
     public void conferenceFocusChanged(CallPeerConferenceEvent conferenceEvent)
     {
+        Console.Log("JVB Conference Focus changed");
         //we don't care?
     }
 
@@ -1234,6 +1249,7 @@ Console.Log("We got everything we need for peer " + peer.toString());
     @Override
     public void conferenceMemberAdded(CallPeerConferenceEvent conferenceEvent)
     {
+        Console.Log("JVB Conference Member added");
         ConferenceMember conferenceMember
             = conferenceEvent.getConferenceMember();
 
@@ -1246,6 +1262,7 @@ Console.Log("We got everything we need for peer " + peer.toString());
     @Override
     public void conferenceMemberErrorReceived(CallPeerConferenceEvent conferenceEvent)
     {
+        Console.Log("JVB Conference member error received");
         //we don't care?
     }
 
@@ -1255,6 +1272,7 @@ Console.Log("We got everything we need for peer " + peer.toString());
     @Override
     public void conferenceMemberRemoved(CallPeerConferenceEvent conferenceEvent)
     {
+        Console.Log("JVB Conference Member removed");
         ConferenceMember conferenceMember
             = conferenceEvent.getConferenceMember();
 
@@ -1268,6 +1286,7 @@ Console.Log("We got everything we need for peer " + peer.toString());
      */
     private void inviteFocus(final EntityBareJid roomIdentifier)
     {
+        Console.Log("JVB Invite focus");
         if (callContext == null || callContext.getDomain() == null)
         {
             logger.error("No domain name info to use for inviting focus!"
