@@ -32,7 +32,10 @@ import org.jitsi.jigasi.stats.*;
 import org.jitsi.jigasi.util.*;
 import org.jitsi.jigasi.xmpp.*;
 import org.jitsi.service.neomedia.*;
+import org.jitsi.service.neomedia.device.MediaDevice;
 import org.jitsi.util.*;
+import org.jitsi.util.event.VideoEvent;
+import org.jitsi.util.event.VideoListener;
 import org.jivesoftware.smack.SmackException.*;
 import org.jivesoftware.smack.packet.*;
 import org.jivesoftware.smackx.nick.packet.*;
@@ -437,7 +440,7 @@ Console.Log("We got everything we need for peer " + peer.toString());
                             resourceIdentifier.toString()));
 
         xmppProviderFactory.loadAccount(xmppAccount);
-
+        Console.Log("Loaded xmpp");
         started = true;
 
         // Look for first XMPP provider
@@ -445,6 +448,7 @@ Console.Log("We got everything we need for peer " + peer.toString());
             = ServiceUtils.getServiceReferences(
                     JigasiBundleActivator.osgiContext,
                     ProtocolProviderService.class);
+        Console.Log("Found " + providers.size() + " providers");
 
         for (ServiceReference<ProtocolProviderService> serviceRef : providers)
         {
@@ -984,6 +988,9 @@ Console.Log("We got everything we need for peer " + peer.toString());
             inviteTimeout.cancel();
 
             jvbCall = event.getSourceCall();
+
+
+
             jvbCall.setData(CallContext.class, callContext);
 
             if(jvbCall != null)
@@ -1015,11 +1022,49 @@ Console.Log("We got everything we need for peer " + peer.toString());
                     .setDisableHolePunching(true);
             }
 
+            MediaAwareCallPeer macp = ((MediaAwareCallPeer)peer);
+            Console.Log("MACP \r\n" +
+                "Is JVB: "  +  macp.isJitsiVideobridge() + " \r\n" +
+                "Is Local vid: " + macp.isLocalVideoStreaming() + "\r\n"
+            );
+            try {
+                Console.Log("trying to enable video");
+                macp.setLocalVideoAllowed(true);
+                MediaDevice device = macp.getCall().getDefaultDevice(MediaType.VIDEO);
+                Console.Log("The device: " + device.toString());
+                Console.Log("Format: " + device.getFormat().toString());
+                Console.Log("Direction: " + device.getDirection().name());
+                macp.getCall().setVideoDevice(device, MediaUseCase.ANY);
+
+            } catch (Exception e) {
+                Console.Log("Could not allow video");
+            }
+            macp.getMediaHandler().setLocalVideoTransmissionEnabled(true);
+            macp.getMediaHandler().addVideoListener(new VideoListener(){
+            
+                @Override
+                public void videoUpdate(VideoEvent event) {
+                    Console.Log("Peer video update");
+                }
+            
+                @Override
+                public void videoRemoved(VideoEvent event) {
+                    Console.Log("Peer video removed");
+                }
+            
+                @Override
+                public void videoAdded(VideoEvent event) {
+                    Console.Log("Peer video added");
+                }
+            });
+            
+
             peer.addCallPeerListener(new CallPeerAdapter()
             {
                 @Override
                 public void peerStateChanged(CallPeerChangeEvent evt)
                 {
+                    Console.Log("Peer state changed");
                     CallPeer peer = evt.getSourceCallPeer();
                     CallPeerState peerState = peer.getState();
                     logger.info(
@@ -1028,6 +1073,7 @@ Console.Log("We got everything we need for peer " + peer.toString());
 
                     if (CallPeerState.CONNECTED.equals(peerState))
                     {
+                        Console.Log("JVB Advertising");
                         advertisePeerSSRCs(peer);
                     }
                 }
