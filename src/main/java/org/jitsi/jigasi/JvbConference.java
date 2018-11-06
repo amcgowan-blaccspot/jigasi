@@ -402,6 +402,20 @@ Console.Log("Checking supported features...");
 
         Console.Log("The class is: " + mediaHandler.getClass().getName());
         
+        if (mediaHandler instanceof CallPeerMediaHandlerJabberImpl) {
+            CallPeerMediaHandlerJabberImpl h = (CallPeerMediaHandlerJabberImpl)mediaHandler;
+            try {
+                h.createContentList();
+                h.reinitAllContents();
+                
+            } catch (Exception e) {
+                Console.Log("Could not reinit");
+                Console.Log(e.getMessage());
+            }
+
+            
+        }
+
         if (mediaHandler == null) {
             Console.Log("The peer " + peer.toString() + " does not have a media handler for " + mediaType.toString());
             return null;
