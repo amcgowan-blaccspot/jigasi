@@ -399,17 +399,26 @@ Console.Log("Checking supported features...");
 
         CallPeerMediaHandler mediaHandler
             = peerMedia.getMediaHandler();
+
+        Console.Log("The class is: " + mediaHandler.getClass().getName());
+        
         if (mediaHandler == null) {
             Console.Log("The peer " + peer.toString() + " does not have a media handler for " + mediaType.toString());
             return null;
         }
+Console.Log("We have the media hhandler for " + mediaType.toString());
 
         MediaStream stream = mediaHandler.getStream(mediaType);
+
         if (stream == null) {
             Console.Log("Could not get the stream from peer: " + peer.toString() + " for " + mediaType.toString());
-            return null;
+            Console.Log("Just returning 1 to see what might happen");
+            return "1";
+            //return null;
         }
 Console.Log("We got everything we need for peer " + peer.toString());
+Console.Log("Sending localsourceid of: " + stream.getLocalSourceID());
+
         return Long.toString(stream.getLocalSourceID());
     }
 
