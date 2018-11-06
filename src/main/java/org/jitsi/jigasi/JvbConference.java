@@ -401,12 +401,13 @@ Console.Log("Checking supported features...");
             = peerMedia.getMediaHandler();
 
         Console.Log("The class is: " + mediaHandler.getClass().getName());
-        
+
         if (mediaHandler instanceof CallPeerMediaHandlerJabberImpl) {
+            Console.Log("Instance of jabber impl");
             CallPeerMediaHandlerJabberImpl h = (CallPeerMediaHandlerJabberImpl)mediaHandler;
             try {
                 h.createContentList();
-                h.reinitAllContents();
+               // h.reinitAllContents();
                 
             } catch (Exception e) {
                 Console.Log("Could not reinit");
@@ -435,6 +436,7 @@ Console.Log("Sending localsourceid of: " + stream.getLocalSourceID());
 
         return Long.toString(stream.getLocalSourceID());
     }
+    
 
     /**
      * Start this JVB conference handler.
