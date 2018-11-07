@@ -293,7 +293,7 @@ public class CallControlMucActivator
             logger.info(
                 "Joining call control room: " + roomName + " pps:" + pps);
 
-            Console.Log("Joining call control room: " + roomName + " pps:" + pps));
+            Console.Log("Joining call control room: " + roomName + " pps:" + pps);
 
             ChatRoom mucRoom = muc.findRoom(roomName);
 
