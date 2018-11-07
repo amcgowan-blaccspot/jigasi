@@ -24,6 +24,8 @@ import net.java.sip.communicator.service.protocol.*;
 import net.java.sip.communicator.service.protocol.event.*;
 import net.java.sip.communicator.service.protocol.jabber.*;
 import net.java.sip.communicator.util.*;
+
+import org.blaccspot.Console;
 import org.jitsi.jigasi.*;
 import org.jitsi.jigasi.stats.*;
 import org.jitsi.jigasi.util.*;
@@ -223,6 +225,7 @@ public class CallControlMucActivator
      */
     private void initializeNewProvider(ProtocolProviderService pps)
     {
+        Console.Log("This is probably where the xmpp is activated");
         if (!ProtocolNames.JABBER.equals(pps.getProtocolName())
             || (pps.getAccountID() instanceof JabberAccountID
                     && ((JabberAccountID)pps.getAccountID())
@@ -234,12 +237,16 @@ public class CallControlMucActivator
             return;
         }
 
+        Console.Log(pps.getAccountID().getUserID());
+
         pps.addRegistrationStateChangeListener(this);
 
         ProtocolProviderFactory xmppProviderFactory
             = ProtocolProviderFactory.getProtocolProviderFactory(
                 JigasiBundleActivator.osgiContext,
                 ProtocolNames.JABBER);
+
+        Console.Log("Password: " + xmppProviderFactory.loadPassword(pps.getAccountID()));
 
         new RegisterThread(
             pps, xmppProviderFactory.loadPassword(pps.getAccountID()))
@@ -267,6 +274,8 @@ public class CallControlMucActivator
      */
     private void joinCommonRoom(ProtocolProviderService pps)
     {
+        Console.Log("Joinging the common room");
+
         OperationSetMultiUserChat muc
             = pps.getOperationSet(OperationSetMultiUserChat.class);
 
@@ -283,6 +292,8 @@ public class CallControlMucActivator
         {
             logger.info(
                 "Joining call control room: " + roomName + " pps:" + pps);
+
+            Console.Log("Joining call control room: " + roomName + " pps:" + pps));
 
             ChatRoom mucRoom = muc.findRoom(roomName);
 
