@@ -228,7 +228,14 @@ Console.Log("The allowed jid string is: " + allowedJidString);
             createdSession[0] = session;
         }
 
-        return RefIq.createResult(iq, "xmpp:" + ctx.getCallResource());
+        RefIq riq = RefIq.createResult(iq, "xmpp:" + ctx.getCallResource());
+        Console.Log("Ref iq is");
+        Console.Log(riq.toXML().toString());
+
+        Console.Log("The context is: ");
+        ctx.writeOut();
+
+        return riq;
     }
 
     /**

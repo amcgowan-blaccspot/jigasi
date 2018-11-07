@@ -17,6 +17,7 @@
  */
 package org.jitsi.jigasi;
 
+import org.blaccspot.Console;
 import org.jitsi.util.*;
 import org.jxmpp.jid.*;
 import org.jxmpp.jid.impl.*;
@@ -401,5 +402,21 @@ public class CallContext
         room = room.substring(0, room.indexOf("@"));
 
         return url + "/" + room;
+    }
+
+    public void writeOut() {
+        Console.Log("Meet url: " + this.getMeetingUrl());
+        Console.Log("Bosh: " + this.boshURL);
+        Console.Log("destination: " + this.destination);
+        Console.Log("domain: " + this.domain);
+        Console.Log("mucAddressPrefix: " + this.mucAddressPrefix);
+        Console.Log("roomName: " + this.roomName);
+        Console.Log("roomPassword: " + this.roomPassword);
+        Console.Log("subDomain: " + this.subDomain);
+        
+        Jid cr = this.getCallResource();
+        if (cr != null) {
+            Console.Log("Call Resource: " + cr.toString());
+        }
     }
 }
