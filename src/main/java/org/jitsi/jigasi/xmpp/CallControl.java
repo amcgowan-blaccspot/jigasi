@@ -144,6 +144,9 @@ public class CallControl
         }
 
         String allowedJidString = config.getString(ALLOWED_JID_P_NAME, null);
+
+Console.Log("The allowed jid string is: " + allowedJidString);
+
         if (allowedJidString != null)
         {
             try
