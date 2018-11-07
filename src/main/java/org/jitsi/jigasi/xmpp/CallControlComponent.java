@@ -133,6 +133,23 @@ public class CallControlComponent
     }
 
     @Override
+    protected void handleIQResultImpl(IQ iq) {
+        Console.Log("RESULT:");
+        Console.Log(iq.toXML());
+        super.handleIQResultImpl(iq);
+    }
+    @Override
+    protected IQ handleIQGetImpl(IQ iq) throws Exception{ 
+        Console.Log("IQ GET:");
+        Console.Log(iq.toXML());
+        IQ result = super.handleIQGetImpl(iq);
+        Console.Log("IQ RESULT:");
+        Console.Log(result.toXML());        
+        return result;
+    }
+
+
+    @Override
     public void serviceChanged(ServiceEvent serviceEvent)
     {
         if (serviceEvent.getType() != ServiceEvent.REGISTERED)
@@ -296,8 +313,13 @@ public class CallControlComponent
     protected IQ handleIQSetImpl(IQ iq)
         throws Exception
     {
+        Console.Log("INCOMING SET");
+        Console.Log(iq.toXML());
 
         IQ resultIQ = handleIQ(iq);
+
+        Console.Log("Reulst:");
+        Console.Log(resultIQ.toXML());
 
         return (resultIQ == null) ? super.handleIQSetImpl(iq) : resultIQ;
     }
@@ -317,6 +339,9 @@ public class CallControlComponent
     public IQ handleIQ(IQ iq)
         throws Exception
     {
+        Console.Log("IQ HANDLER");
+        Console.Log(iq.toXML());
+
         org.jivesoftware.smack.packet.IQ resultIQ = null;
         if (callControl == null)
         {
