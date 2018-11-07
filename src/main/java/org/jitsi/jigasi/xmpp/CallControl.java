@@ -130,6 +130,7 @@ public class CallControl
      */
     public CallControl(ConfigurationService config)
     {
+        Console.Log("Starting call control service");
         Boolean always_trust_mode = config.getBoolean(
             "net.java.sip.communicator.service.gui.ALWAYS_TRUST_MODE_ENABLED",
             false);

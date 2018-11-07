@@ -387,7 +387,7 @@ Console.Log("Checking supported features...");
      */
     private String getPeerSSRCforMedia(CallPeer peer, MediaType mediaType)
     {
-        Console.Log("trying to get media");
+        Console.Log("trying to get media " + mediaType.name() + " for " + peer.getDisplayName());
         if (!(peer instanceof MediaAwareCallPeer)) {
             Console.Log("The peer " + peer.toString() + " is not a media aware peer for " + mediaType.toString());
             return null;
