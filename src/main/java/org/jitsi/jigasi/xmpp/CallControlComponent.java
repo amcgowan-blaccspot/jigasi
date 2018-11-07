@@ -126,6 +126,13 @@ public class CallControlComponent
     }
 
     @Override
+    protected IQ handleDiscoInfo(IQ iq) {
+        IQ response = super.handleDiscoInfo(iq);
+        Console.Log(response.toXML());
+        return response;
+    }
+
+    @Override
     public void serviceChanged(ServiceEvent serviceEvent)
     {
         if (serviceEvent.getType() != ServiceEvent.REGISTERED)
@@ -139,6 +146,7 @@ public class CallControlComponent
 
         if(this.callControl == null)
         {
+            Console.Log("Starting compy...");
             internalStart(bundleContext, null, null);
         }
 
@@ -175,6 +183,7 @@ public class CallControlComponent
                                SipGateway sipGateway,
                                TranscriptionGateway transcriptionGateway)
     {
+        Console.Log("Creating new call control");
         ConfigurationService config = ServiceUtils.getService(
                 bundleContext, ConfigurationService.class);
         this.callControl = new CallControl(config);

@@ -1374,6 +1374,7 @@ Console.Log("Sending localsourceid of: " + stream.getLocalSourceID());
             return;
         }
 
+        Console.Log("When does this need to happen?");
         ConferenceIq focusInviteIQ = new ConferenceIq(roomIdentifier);
 
         // FIXME: uses hardcoded values that are currently used in production
