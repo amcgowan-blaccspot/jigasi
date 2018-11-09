@@ -268,6 +268,7 @@ Console.Log("Checking supported features...");
     private void advertisePeerSSRCs(CallPeer peer)
     {
         Console.Log("Advertising pper SSRCs");
+        Console.Log("--------------------------------------------------------------");
         String audioSSRC = getPeerSSRCforMedia(peer,
                                                MediaType.AUDIO);
         String videoSSRC = getPeerSSRCforMedia(peer,
@@ -291,6 +292,10 @@ Console.Log("Checking supported features...");
             mediaPresence.addChildExtension(ssrc);
         }
 
+        if (videoSSRC == null) {
+            Console.Log("Faking video source");
+            videoSSRC = "23432";
+        }
         if (videoSSRC != null)
         {
             MediaPresenceExtension.Source ssrc
@@ -428,8 +433,8 @@ Console.Log("We have the media hhandler for " + mediaType.toString());
         if (stream == null) {
             Console.Log("Could not get the stream from peer: " + peer.toString() + " for " + mediaType.toString());
             Console.Log("Just returning 1 to see what might happen");
-            return "1";
-            //return null;
+            //return "1";
+            return null;
         }
 Console.Log("We got everything we need for peer " + peer.toString());
 Console.Log("Sending localsourceid of: " + stream.getLocalSourceID());
@@ -650,6 +655,8 @@ Console.Log("Sending localsourceid of: " + stream.getLocalSourceID());
         try
         {
             String roomName = callContext.getRoomName();
+
+
             if (!roomName.contains("@"))
             {
                 // we check for optional muc service
@@ -1013,7 +1020,7 @@ Console.Log("Sending localsourceid of: " + stream.getLocalSourceID());
             inviteTimeout.cancel();
 
             jvbCall = event.getSourceCall();
-
+            
 
 
             jvbCall.setData(CallContext.class, callContext);
@@ -1036,7 +1043,8 @@ Console.Log("Sending localsourceid of: " + stream.getLocalSourceID());
             {
                 logger.warn("Could not add JvbConference as " +
                     "CallPeerConferenceListener because jvbCall is" +
-                    " null");            }
+                    " null");            
+            }
 
             Console.Log("Hole punching");
             // disable hole punching jvb
