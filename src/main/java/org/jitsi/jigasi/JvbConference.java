@@ -295,6 +295,9 @@ Console.Log("Checking supported features...");
         if (videoSSRC == null) {
             Console.Log("Faking video source");
             videoSSRC = "23432";
+        } else {
+            Console.Log("VIDEO SOURCE IS NOT NULL");
+            Console.Log("Source is: " + videoSSRC);
         }
         if (videoSSRC != null)
         {
@@ -303,6 +306,15 @@ Console.Log("Checking supported features...");
 
             ssrc.setMediaType(MediaType.VIDEO.toString());
             ssrc.setSSRC(videoSSRC);
+            Console.Log("Setting video src of " + videoSSRC);
+            mediaPresence.addChildExtension(ssrc);
+        } else {
+            Console.Log("If this doesn't get it nothing will");
+            MediaPresenceExtension.Source ssrc
+                = new MediaPresenceExtension.Source();
+
+            ssrc.setMediaType(MediaType.VIDEO.toString());
+            ssrc.setSSRC("12345");
 
             mediaPresence.addChildExtension(ssrc);
         }
@@ -431,8 +443,6 @@ Console.Log("We have the media hhandler for " + mediaType.toString());
         MediaStream stream = mediaHandler.getStream(mediaType);
 
         if (stream == null) {
-            Console.Log("Could not get the stream from peer: " + peer.toString() + " for " + mediaType.toString());
-            Console.Log("Just returning 1 to see what might happen");
             //return "1";
             return null;
         }
@@ -775,6 +785,7 @@ Console.Log("Sending localsourceid of: " + stream.getLocalSourceID());
     {
         logger.info("JVB conference call IN_PROGRESS "
             + callContext.getRoomName());
+Console.Log("This could be source of sdp?");
 
         OperationSetIncomingDTMF opSet
             = this.xmppProvider.getOperationSet(OperationSetIncomingDTMF.class);
@@ -942,7 +953,7 @@ Console.Log("Sending localsourceid of: " + stream.getLocalSourceID());
             OperationSetJitsiMeetTools jitsiMeetTools
                 = xmppProvider.getOperationSet(
                     OperationSetJitsiMeetTools.class);
-
+Console.Log("SDP SENT HHERE?");
             jitsiMeetTools.sendPresenceExtension(mucRoom, extension);
         }
     }
