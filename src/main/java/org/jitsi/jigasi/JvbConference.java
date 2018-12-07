@@ -1055,7 +1055,19 @@ public class JvbConference
         }
 
         @Override
-        public void outgoingCallCreated(CallEvent event) { }
+        public void outgoingCallCreated(CallEvent event) {
+            Console.Log("Getting Peer");
+            CallPeer peer = event.getSourceCall().getCallPeers().next();
+            Console.Log("Peer was found");
+            Console.Log("Outgoing call created");
+            Console.Log("Getting video telephony operation set");
+            OperationSetVideoTelephony videoTelephony
+                    = xmppProvider.getOperationSet(OperationSetVideoTelephony.class);
+            Console.Log("Video telephony loaded");
+            Console.Log("Adding video listener");
+            videoTelephony.addVideoListener(peer, new JvbVideoListener());
+            Console.Log("Video listener has been added");
+        }
 
         @Override
         public void callEnded(CallEvent event) { }
