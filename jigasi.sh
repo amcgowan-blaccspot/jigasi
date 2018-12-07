@@ -18,7 +18,8 @@ else
 fi
 
 mainClass="org.jitsi.jigasi.Main"
-cp=$(JARS=($SCRIPT_DIR/jigasi.jar $SCRIPT_DIR/lib/*.jar); IFS=:; echo "${JARS[*]}")
+cp=$(JARS=($SCRIPT_DIR/jigasi-1.1-SNAPSHOT.jar $SCRIPT_DIR/lib/*.jar); IFS=:; echo "${JARS[*]}")
+
 libs="$SCRIPT_DIR/lib/native/$architecture"
 logging_config="$SCRIPT_DIR/lib/logging.properties"
 
