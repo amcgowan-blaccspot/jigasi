@@ -31,6 +31,8 @@ import org.jitsi.jigasi.util.*;
 import org.jitsi.jigasi.xmpp.*;
 import org.jitsi.service.neomedia.*;
 import org.jitsi.util.*;
+import org.jitsi.util.event.VideoEvent;
+import org.jitsi.util.event.VideoListener;
 import org.jivesoftware.smack.SmackException.*;
 import org.jivesoftware.smack.packet.*;
 import org.jivesoftware.smackx.nick.packet.*;
@@ -39,6 +41,8 @@ import org.jxmpp.jid.impl.*;
 import org.jxmpp.jid.parts.*;
 import org.jxmpp.stringprep.*;
 import org.osgi.framework.*;
+
+import org.blaccspot.Console;
 
 import java.util.*;
 
@@ -168,6 +172,11 @@ public class JvbConference
      * Operation set telephony.
      */
     private OperationSetBasicTelephony telephony;
+
+    /**
+     * Operation set video telephhony.
+     */
+    private OperationSetVideoTelephony videoTelephony;
 
     /**
      * Object listens for incoming calls.
@@ -908,6 +917,22 @@ public class JvbConference
         return callContext.getMeetingUrl();
     }
 
+    private class JvbVideoListener
+        implements VideoListener
+    {
+        public void videoAdded(VideoEvent event) {
+            Console.Log("[JVB VL] - Video Added");
+        }
+
+        public void videoRemoved(VideoEvent event) {
+            Console.Log("[JVB VL] - Video Removed");
+        }
+
+        public void videoUpdate(VideoEvent event) {
+            Console.Log("[JVB VL] - Video Updated");
+        }
+    }
+
     private class JvbCallListener
         implements CallListener
     {
@@ -987,6 +1012,14 @@ public class JvbConference
                     .setDisableHolePunching(true);
             }
 
+            Console.Log("Getting video telephony operation set");
+            OperationSetVideoTelephony videoTelephony
+                    = xmppProvider.getOperationSet(OperationSetVideoTelephony.class);
+            Console.Log("Video telephony loaded");
+            Console.Log("Adding video listener");
+            videoTelephony.addVideoListener(peer, new JvbVideoListener());
+            Console.Log("Video listener has been added");
+
             peer.addCallPeerListener(new CallPeerAdapter()
             {
                 @Override
@@ -1017,6 +1050,8 @@ public class JvbConference
 
             // Accept incoming jingle call
             CallManager.acceptCall(jvbCall);
+
+
         }
 
         @Override
