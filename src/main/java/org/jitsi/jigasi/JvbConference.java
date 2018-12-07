@@ -524,6 +524,7 @@ public class JvbConference
     private synchronized void setXmppProvider(
             ProtocolProviderService xmppProvider)
     {
+        Console.Log("Setting xmpp provider");
         if(this.xmppProvider != null)
             throw new IllegalStateException("unexpected");
 
@@ -544,6 +545,7 @@ public class JvbConference
 
         xmppProvider.addRegistrationStateChangeListener(this);
 
+        Console.Log("Telephony listners hooked");
         this.telephony
             = xmppProvider.getOperationSet(OperationSetBasicTelephony.class);
 
@@ -551,6 +553,7 @@ public class JvbConference
 
         if (xmppProvider.isRegistered())
         {
+            Console.Log("JJoining conference");
             joinConferenceRoom();
         }
         else
@@ -601,6 +604,8 @@ public class JvbConference
         OperationSetMultiUserChat muc
             = xmppProvider.getOperationSet(OperationSetMultiUserChat.class);
         muc.addPresenceListener(this);
+
+        Console.Log("Joining conference room");
 
         try
         {
