@@ -591,7 +591,6 @@ public class JvbConference
                             jabberImpl.getConnection().addAsyncStanzaListener(stanzaListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.Message.class));
                         } catch (Exception e) {
                             Console.Log("Could not add listener");
-                            Console.Log(e.getStackTrace());
                             Console.Log(e.getMessage());
                             Console.Log(e.toString());
                         }
