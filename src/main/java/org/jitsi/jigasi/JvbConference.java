@@ -122,11 +122,18 @@ public class JvbConference
         if (JigasiBundleActivator.getConfigurationService()
                 .getBoolean(SipGateway.P_NAME_DISABLE_ICE, false))
         {
+            Console.Log("Ice disabled");
             meetTools.removeSupportedFeature(
                     "urn:xmpp:jingle:transports:ice-udp:1");
 
             logger.info("ICE feature will not be advertised");
         }
+
+        meetTools.addSupportedFeature("urn:xmpp:jingle:apps:rtp:1");
+        meetTools.addSupportedFeature("urn:xmpp:jingle:apps:rtp:audio");
+        meetTools.addSupportedFeature("urn:xmpp:jingle:apps:rtp:video");
+
+
     }
 
     /**
@@ -195,7 +202,9 @@ public class JvbConference
     /**
      * Intercept all xmpp messages
      */
-    private final JvbStanzaListner stanzaListener = new JvbStanzaListner();
+    private final JvbStanzaListener stanzaListener = new JvbStanzaListener();
+    private final JvbStanzaSendListener stanzaSendListener = new JvbStanzaSendListener();
+    private final JvbStanzaInterceptListener stanzaInterceptListener = new JvbStanzaInterceptListener();
 
     /**
      * <tt>ProtocolProviderFactory</tt> instance used to manage XMPP accounts.
@@ -580,22 +589,23 @@ public class JvbConference
             && mucRoom == null
             && evt.getNewState() == RegistrationState.REGISTERED)
         {
-            Console.Log("The provider is a: " + xmppProvider.getClass().getName());
-            Console.Log("Attempting to hook into stanza listener");
-
             if (xmppProvider instanceof ProtocolProviderServiceJabberImpl) {
                 ProtocolProviderServiceJabberImpl jabberImpl = ((ProtocolProviderServiceJabberImpl) xmppProvider);
                 if (jabberImpl != null) {
                     if (jabberImpl.getConnection() != null) {
-                        try {
-                            Console.Log("Adding Listener");
-                            jabberImpl.getConnection().addAsyncStanzaListener(stanzaListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.Presence.class));
-                            Console.Log("Stanza listener hooked");
-                        } catch (Exception e) {
-                            Console.Log("Could not add listener");
-                            Console.Log(e.getMessage());
-                            Console.Log(e.toString());
-                        }
+
+                        jabberImpl.getConnection().addStanzaSendingListener(stanzaSendListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.IQ.class));
+                        jabberImpl.getConnection().addStanzaSendingListener(stanzaSendListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.Message.class));
+                        jabberImpl.getConnection().addStanzaSendingListener(stanzaSendListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.Presence.class));
+
+                        jabberImpl.getConnection().addStanzaInterceptor(stanzaInterceptListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.IQ.class));
+                        jabberImpl.getConnection().addStanzaInterceptor(stanzaInterceptListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.Message.class));
+                        jabberImpl.getConnection().addStanzaInterceptor(stanzaInterceptListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.Presence.class));
+
+
+                        jabberImpl.getConnection().addAsyncStanzaListener(stanzaListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.IQ.class));
+                        jabberImpl.getConnection().addAsyncStanzaListener(stanzaListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.Message.class));
+                        jabberImpl.getConnection().addAsyncStanzaListener(stanzaListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.Presence.class));
                     } else {
                         Console.Log("Conneciton is null");
                     }
@@ -605,7 +615,6 @@ public class JvbConference
             } else {
                 Console.Log("Was not an instance of PPSJabberImpl");
             }
-
 
             // Join the MUC
             joinConferenceRoom();
@@ -1492,11 +1501,24 @@ public class JvbConference
         }
     }
 
-    class JvbStanzaListner implements StanzaListener {
+    class JvbStanzaListener implements StanzaListener {
         @Override
         public void processStanza(Stanza packet) throws NotConnectedException, InterruptedException, NotLoggedInException {
-            Console.Log("[JVB STANZA]");
-            Console.Log(packet.toXML().toString());
+            Console.Log("[INCOMING JVB STANZA]" + packet.toXML().toString());
+        }
+    }
+
+    class JvbStanzaSendListener implements StanzaListener {
+        @Override
+        public void processStanza(Stanza packet) throws NotConnectedException, InterruptedException, NotLoggedInException {
+            Console.Log("[OUTGOING JVB STANZA]" + packet.toXML().toString());
+        }
+    }
+
+    class JvbStanzaInterceptListener implements StanzaListener {
+        @Override
+        public void processStanza(Stanza packet) throws NotConnectedException, InterruptedException, NotLoggedInException {
+            Console.Log("[INTERCEPT JVB STANZA]" + packet.toXML().toString());
         }
     }
 }
