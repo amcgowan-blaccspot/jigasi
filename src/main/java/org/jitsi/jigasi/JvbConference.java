@@ -552,15 +552,7 @@ public class JvbConference
 
         xmppProvider.addRegistrationStateChangeListener(this);
 
-        Console.Log("The provider is a: " + xmppProvider.getClass().getName());
-        Console.Log("Attempting to hook into stanza listener");
 
-        if (xmppProvider instanceof ProtocolProviderServiceJabberImpl) {
-            ((ProtocolProviderServiceJabberImpl) xmppProvider).getConnection().addAsyncStanzaListener(stanzaListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.Message.class));
-        } else {
-            Console.Log("Was not an instance of PPSJabberImpl");
-        }
-        Console.Log("Stanza listener hooked");
 
 
         Console.Log("Telephony listners hooked");
@@ -588,6 +580,32 @@ public class JvbConference
             && mucRoom == null
             && evt.getNewState() == RegistrationState.REGISTERED)
         {
+            Console.Log("The provider is a: " + xmppProvider.getClass().getName());
+            Console.Log("Attempting to hook into stanza listener");
+
+            if (xmppProvider instanceof ProtocolProviderServiceJabberImpl) {
+                ProtocolProviderServiceJabberImpl jabberImpl = ((ProtocolProviderServiceJabberImpl) xmppProvider);
+                if (jabberImpl != null) {
+                    if (jabberImpl.getConnection() == null) {
+                        try {
+                            jabberImpl.getConnection().addAsyncStanzaListener(stanzaListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.Message.class));
+                        } catch (Exception e) {
+                            Console.Log("Could not add listener");
+                            Console.Log(e.getStackTrace());
+                            Console.Log(e.getMessage());
+                            Console.Log(e.toString());
+                        }
+                    } else {
+                        Console.Log("Conneciton is null");
+                    }
+                } else {
+                    Console.Log("Invalid cast to jabber impl")
+                }
+            } else {
+                Console.Log("Was not an instance of PPSJabberImpl");
+            }
+            Console.Log("Stanza listener hooked");
+
             // Join the MUC
             joinConferenceRoom();
         }
