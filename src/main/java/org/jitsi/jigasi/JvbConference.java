@@ -589,7 +589,7 @@ public class JvbConference
                     if (jabberImpl.getConnection() != null) {
                         try {
                             Console.Log("Adding Listener");
-                            jabberImpl.getConnection().addAsyncStanzaListener(stanzaListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.IQ.class));
+                            jabberImpl.getConnection().addAsyncStanzaListener(stanzaListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.Presence.class));
                             Console.Log("Stanza listener hooked");
                         } catch (Exception e) {
                             Console.Log("Could not add listener");
