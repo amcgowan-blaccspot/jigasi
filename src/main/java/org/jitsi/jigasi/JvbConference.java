@@ -552,11 +552,14 @@ public class JvbConference
 
         xmppProvider.addRegistrationStateChangeListener(this);
 
-
+        Console.Log("The provider is a: " + xmppProvider.getClass().getName());
         Console.Log("Attempting to hook into stanza listener");
 
-        ((ProtocolProviderServiceJabberImpl) xmppProvider).getConnection().addAsyncStanzaListener(stanzaListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.Message.class));
-
+        if (xmppProvider instanceof ProtocolProviderServiceJabberImpl) {
+            ((ProtocolProviderServiceJabberImpl) xmppProvider).getConnection().addAsyncStanzaListener(stanzaListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.Message.class));
+        } else {
+            Console.Log("Was not an instance of PPSJabberImpl");
+        }
         Console.Log("Stanza listener hooked");
 
 
