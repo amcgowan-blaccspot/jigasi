@@ -598,7 +598,7 @@ public class JvbConference
                         Console.Log("Conneciton is null");
                     }
                 } else {
-                    Console.Log("Invalid cast to jabber impl")
+                    Console.Log("Invalid cast to jabber impl");
                 }
             } else {
                 Console.Log("Was not an instance of PPSJabberImpl");
