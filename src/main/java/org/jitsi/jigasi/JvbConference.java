@@ -133,8 +133,16 @@ public class JvbConference
         meetTools.addSupportedFeature("urn:xmpp:jingle:apps:rtp:1");
         meetTools.addSupportedFeature("urn:xmpp:jingle:apps:rtp:audio");
         meetTools.addSupportedFeature("urn:xmpp:jingle:apps:rtp:video");
-        Console.Log("Finished with additional features");
 
+        meetTools.removeSupportedFeature("urn:xmpp:jingle:apps:dtls:0");
+        meetTools.addSupportedFeature("http://jitsi.org/meet/lipsync");
+        meetTools.addSupportedFeature("urn:ietf:rfc:4588");
+        meetTools.addSupportedFeature("urn:ietf:rfc:5761");
+        meetTools.addSupportedFeature("urn:ietf:rfc:5888");
+        meetTools.addSupportedFeature("urn:xmpp:jingle:transports:dtls-sctp:1");
+        meetTools.addSupportedFeature("urn:xmpp:rayo:client:1");
+
+        Console.Log("Finished with additional features");
     }
 
     /**
