@@ -588,7 +588,9 @@ public class JvbConference
                 if (jabberImpl != null) {
                     if (jabberImpl.getConnection() == null) {
                         try {
-                            jabberImpl.getConnection().addAsyncStanzaListener(stanzaListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.Message.class));
+                            Console.Log("Adding Listener");
+                            jabberImpl.getConnection().addAsyncStanzaListener(stanzaListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.IQ.class));
+                            Console.Log("Stanza listener hooked");
                         } catch (Exception e) {
                             Console.Log("Could not add listener");
                             Console.Log(e.getMessage());
@@ -603,7 +605,7 @@ public class JvbConference
             } else {
                 Console.Log("Was not an instance of PPSJabberImpl");
             }
-            Console.Log("Stanza listener hooked");
+
 
             // Join the MUC
             joinConferenceRoom();
