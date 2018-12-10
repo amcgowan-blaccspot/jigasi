@@ -1496,7 +1496,7 @@ public class JvbConference
         @Override
         public void processStanza(Stanza packet) throws NotConnectedException, InterruptedException, NotLoggedInException {
             Console.Log("[JVB STANZA]");
-            Console.Log(packet.toString());
+            Console.Log(packet.toXML().toString());
         }
     }
 }
