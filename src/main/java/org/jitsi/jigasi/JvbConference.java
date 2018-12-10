@@ -129,10 +129,11 @@ public class JvbConference
             logger.info("ICE feature will not be advertised");
         }
 
+        Console.Log("Adding additional features");
         meetTools.addSupportedFeature("urn:xmpp:jingle:apps:rtp:1");
         meetTools.addSupportedFeature("urn:xmpp:jingle:apps:rtp:audio");
         meetTools.addSupportedFeature("urn:xmpp:jingle:apps:rtp:video");
-
+        Console.Log("Finished with additional features");
 
     }
 
@@ -205,6 +206,7 @@ public class JvbConference
     private final JvbStanzaListener stanzaListener = new JvbStanzaListener();
     private final JvbStanzaSendListener stanzaSendListener = new JvbStanzaSendListener();
     private final JvbStanzaInterceptListener stanzaInterceptListener = new JvbStanzaInterceptListener();
+    private final AllStanzaFilter stanzaFilter = new AllStanzaFilter();
 
     /**
      * <tt>ProtocolProviderFactory</tt> instance used to manage XMPP accounts.
@@ -585,6 +587,7 @@ public class JvbConference
     public synchronized void registrationStateChanged(
             RegistrationStateChangeEvent evt)
     {
+        Console.Log("Registration state changed");
         if (started
             && mucRoom == null
             && evt.getNewState() == RegistrationState.REGISTERED)
@@ -594,18 +597,10 @@ public class JvbConference
                 if (jabberImpl != null) {
                     if (jabberImpl.getConnection() != null) {
 
-                        jabberImpl.getConnection().addStanzaSendingListener(stanzaSendListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.IQ.class));
-                        jabberImpl.getConnection().addStanzaSendingListener(stanzaSendListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.Message.class));
-                        jabberImpl.getConnection().addStanzaSendingListener(stanzaSendListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.Presence.class));
+                        jabberImpl.getConnection().addStanzaSendingListener(stanzaSendListener, stanzaFilter);
+                        jabberImpl.getConnection().addStanzaInterceptor(stanzaInterceptListener,  stanzaFilter);
+                        jabberImpl.getConnection().addAsyncStanzaListener(stanzaListener, stanzaFilter);
 
-                        jabberImpl.getConnection().addStanzaInterceptor(stanzaInterceptListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.IQ.class));
-                        jabberImpl.getConnection().addStanzaInterceptor(stanzaInterceptListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.Message.class));
-                        jabberImpl.getConnection().addStanzaInterceptor(stanzaInterceptListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.Presence.class));
-
-
-                        jabberImpl.getConnection().addAsyncStanzaListener(stanzaListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.IQ.class));
-                        jabberImpl.getConnection().addAsyncStanzaListener(stanzaListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.Message.class));
-                        jabberImpl.getConnection().addAsyncStanzaListener(stanzaListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.Presence.class));
                     } else {
                         Console.Log("Conneciton is null");
                     }
@@ -1519,6 +1514,18 @@ public class JvbConference
         @Override
         public void processStanza(Stanza packet) throws NotConnectedException, InterruptedException, NotLoggedInException {
             Console.Log("[INTERCEPT JVB STANZA]" + packet.toXML().toString());
+        }
+    }
+
+    class AllStanzaFilter implements StanzaFilter {
+        @Override
+        public boolean accept(Stanza packet) {
+            return true;
+        }
+
+        @Override
+        public String toString() {
+            return "AllStanza";
         }
     }
 }
