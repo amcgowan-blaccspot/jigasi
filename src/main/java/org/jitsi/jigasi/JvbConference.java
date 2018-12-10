@@ -552,12 +552,12 @@ public class JvbConference
 
         xmppProvider.addRegistrationStateChangeListener(this);
 
-        try {
-            Console.Log("Attempting to hook into stanza listener");
-            ((ProtocolProviderServiceJabberImpl) xmppProvider).getConnection().addAsyncStanzaListener(stanzaListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.Message.class));
-        } catch (Exception e) {
-            Console.Log("Could not add stanza listener " + e.getMessage());
-        }
+
+        Console.Log("Attempting to hook into stanza listener");
+
+        ((ProtocolProviderServiceJabberImpl) xmppProvider).getConnection().addAsyncStanzaListener(stanzaListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.Message.class));
+
+        Console.Log("Stanza listener hooked");
 
 
         Console.Log("Telephony listners hooked");
