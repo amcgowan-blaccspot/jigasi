@@ -34,8 +34,10 @@ import org.jitsi.util.*;
 import org.jitsi.util.event.VideoEvent;
 import org.jitsi.util.event.VideoListener;
 import org.jivesoftware.smack.SmackException.*;
+import org.jivesoftware.smack.StanzaListener;
 import org.jivesoftware.smack.packet.*;
 import org.jivesoftware.smackx.nick.packet.*;
+import org.jivesoftware.smack.filter.*;
 import org.jxmpp.jid.*;
 import org.jxmpp.jid.impl.*;
 import org.jxmpp.jid.parts.*;
@@ -166,7 +168,7 @@ public class JvbConference
     /**
      * The call established with JVB conference.
      */
-    private Call jvbCall;
+    private MediaAwareCall jvbCall;
 
     /**
      * Operation set telephony.
@@ -189,6 +191,11 @@ public class JvbConference
      */
     private final JvbCallChangeListener callChangeListener
         = new JvbCallChangeListener();
+
+    /**
+     * Intercept all xmpp messages
+     */
+    private final JvbStanzaListner stanzaListener = new JvbStanzaListner();
 
     /**
      * <tt>ProtocolProviderFactory</tt> instance used to manage XMPP accounts.
@@ -545,6 +552,14 @@ public class JvbConference
 
         xmppProvider.addRegistrationStateChangeListener(this);
 
+        try {
+            Console.Log("Attempting to hook into stanza listener");
+            ((ProtocolProviderServiceJabberImpl) xmppProvider).getConnection().addAsyncStanzaListener(stanzaListener, new StanzaTypeFilter(org.jivesoftware.smack.packet.Message.class));
+        } catch (Exception e) {
+            Console.Log("Could not add stanza listener " + e.getMessage());
+        }
+
+
         Console.Log("Telephony listners hooked");
         this.telephony
             = xmppProvider.getOperationSet(OperationSetBasicTelephony.class);
@@ -793,6 +808,8 @@ public class JvbConference
     {
         logger.info("Member presence change: "+evt);
 
+
+
         ChatRoomMember member = evt.getChatRoomMember();
         String eventType = evt.getEventType();
 
@@ -987,12 +1004,15 @@ public class JvbConference
 
             inviteTimeout.cancel();
 
-            jvbCall = event.getSourceCall();
+
+
+            jvbCall = (MediaAwareCall)event.getSourceCall();
             jvbCall.setData(CallContext.class, callContext);
 
             if(jvbCall != null)
             {
-                CallPeer peerToAdd = jvbCall.getCallPeers().next();
+
+                CallPeer peerToAdd = (MediaAwareCallPeer)jvbCall.getCallPeers().next();
                 if (peerToAdd != null)
                 {
                     peerToAdd.addCallPeerConferenceListener(JvbConference.this);
@@ -1017,13 +1037,13 @@ public class JvbConference
                     .setDisableHolePunching(true);
             }
 
-            Console.Log("Getting video telephony operation set");
+            Console.Log("[IC] Getting video telephony operation set");
             OperationSetVideoTelephony videoTelephony
                     = xmppProvider.getOperationSet(OperationSetVideoTelephony.class);
-            Console.Log("Video telephony loaded");
-            Console.Log("Adding video listener");
+            Console.Log("[IC] Video telephony loaded");
+            Console.Log("[IC] Adding video listener");
             videoTelephony.addVideoListener(peer, new JvbVideoListener());
-            Console.Log("Video listener has been added");
+            Console.Log("[IC] Video listener has been added");
 
             peer.addCallPeerListener(new CallPeerAdapter()
             {
@@ -1061,17 +1081,17 @@ public class JvbConference
 
         @Override
         public void outgoingCallCreated(CallEvent event) {
-            Console.Log("Getting Peer");
+            Console.Log("[OG] Getting Peer");
             CallPeer peer = event.getSourceCall().getCallPeers().next();
-            Console.Log("Peer was found");
-            Console.Log("Outgoing call created");
-            Console.Log("Getting video telephony operation set");
+            Console.Log("[OG] Peer was found");
+            Console.Log("[OG] Outgoing call created");
+            Console.Log("[OG] Getting video telephony operation set");
             OperationSetVideoTelephony videoTelephony
                     = xmppProvider.getOperationSet(OperationSetVideoTelephony.class);
-            Console.Log("Video telephony loaded");
-            Console.Log("Adding video listener");
+            Console.Log("[OG] Video telephony loaded");
+            Console.Log("[OG] Adding video listener");
             videoTelephony.addVideoListener(peer, new JvbVideoListener());
-            Console.Log("Video listener has been added");
+            Console.Log("[OG] Video listener has been added");
         }
 
         @Override
@@ -1447,6 +1467,14 @@ public class JvbConference
             {
                 Thread.currentThread().interrupt();
             }
+        }
+    }
+
+    class JvbStanzaListner implements StanzaListener {
+        @Override
+        public void processStanza(Stanza packet) throws NotConnectedException, InterruptedException, NotLoggedInException {
+            Console.Log("[JVB STANZA]");
+            Console.Log(packet.toString());
         }
     }
 }
