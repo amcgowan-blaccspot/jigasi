@@ -54,6 +54,7 @@ import org.osgi.framework.*;
 
 import org.blaccspot.Console;
 
+import java.net.URI;
 import java.util.*;
 
 /**
@@ -752,6 +753,72 @@ public class JvbConference
         }
     }
 
+    public ContentPacketExtension createDescription(ContentPacketExtension.CreatorEnum creator, String contentName, ContentPacketExtension.SendersEnum senders, List<MediaFormat> formats, List<RTPExtension> rtpExtensions, DynamicPayloadTypeRegistry dynamicPayloadTypes, DynamicRTPExtensionsRegistry rtpExtensionsRegistry) {
+        Console.Log("Create Description")
+        ContentPacketExtension content = new ContentPacketExtension();
+        Console.Log("New packet");
+        RtpDescriptionPacketExtension description = new RtpDescriptionPacketExtension();
+        Console.Log("new extension");
+        content.setCreator(creator);
+        Console.Log("Creator created");
+        content.setName(contentName);
+        Console.Log("Content name set");
+        if (senders != null && senders != ContentPacketExtension.SendersEnum.both) {
+            Console.Log("setting senders");
+            content.setSenders(senders);
+            Console.Log("senders set");
+        }
+        Console.Log("adding child");
+        content.addChildExtension(description);
+        Console.Log("Description set");
+        description.setMedia(((MediaFormat)formats.get(0)).getMediaType().toString());
+        Console.Log("set media");
+        Iterator var9 = formats.iterator();
+        Console.Log("Got var9");
+        while(var9.hasNext()) {
+            Console.Log("Var 9 next");
+            MediaFormat fmt = (MediaFormat)var9.next();
+            Console.Log("Got format");
+            description.addPayloadType(JingleUtils.formatToPayloadType(fmt, dynamicPayloadTypes));
+            Console.Log("Adding payload types");
+        }
+        Console.Log("var9 done");
+        if (rtpExtensions != null && rtpExtensions.size() > 0) {
+            Console.Log("Rtpextensions");
+            var9 = rtpExtensions.iterator();
+            Console.Log("new iterator");
+            while(var9.hasNext()) {
+                Console.Log("Next var9");
+                RTPExtension extension = (RTPExtension)var9.next();
+                Console.Log("got next ext");
+                byte extID = rtpExtensionsRegistry.obtainExtensionMapping(extension);
+                Console.Log("got extid");
+                URI uri = extension.getURI();
+                Console.Log("Got uri");
+                MediaDirection extDirection = extension.getDirection();
+                Console.Log("Got media");
+                String attributes = extension.getExtensionAttributes();
+                Console.Log("got attributes");
+                ContentPacketExtension.SendersEnum sendersEnum = JingleUtils.getSenders(extDirection, false);
+                Console.Log("Got senders");
+                RTPHdrExtPacketExtension ext = new RTPHdrExtPacketExtension();
+                Console.Log("Got rtp");
+                ext.setURI(uri);
+                Console.Log("set uri");
+                ext.setSenders(sendersEnum);
+                Console.Log("set senders");
+                ext.setID(Byte.toString(extID));
+                Console.Log("ext id");
+                ext.setAttributes(attributes);
+                Console.Log("set attributes");
+                description.addChildExtension(ext);
+                Console.Log("set descriptions");
+            }
+        }
+
+        return content;
+    }
+
 
     void doVideoThings(String jidFrom, String jidTo) {
         Console.Log("Video Start");
@@ -773,7 +840,8 @@ public class JvbConference
             DynamicRTPExtensionsRegistry drtper = new DynamicRTPExtensionsRegistry();
             Console.Log("Created DRTPER");
 
-            ContentPacketExtension videoContent = JingleUtils.createDescription(ContentPacketExtension.CreatorEnum.initiator, "webcam", ContentPacketExtension.SendersEnum.both, formats, new ArrayList<RTPExtension>(), dptr, drtper);
+            ContentPacketExtension videoContent = createDescription(ContentPacketExtension.CreatorEnum.initiator, "webcam", ContentPacketExtension.SendersEnum.both, formats, new ArrayList<RTPExtension>(), dptr, drtper);
+
             Console.Log("Created video content");
 
             try {
