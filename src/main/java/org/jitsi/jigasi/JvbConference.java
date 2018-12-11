@@ -856,6 +856,8 @@ public class JvbConference
 
             MediaFormat[] formatsConfigured = encodingConfiguration.getAllEncodings(MediaType.VIDEO);
 
+            Console.Log("Media format count: " + formatsConfigured.length);
+            Console.Log(formatsConfigured.toString());
             for (int i = 0; i < formatsConfigured.length; i++) {
                 Console.Log(formatsConfigured[i].getEncoding().toString());
             }
