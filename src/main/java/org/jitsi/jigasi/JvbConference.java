@@ -32,11 +32,13 @@ import javax.media.*;
 
 import org.apache.commons.lang3.text.FormatFactory;
 import org.jetbrains.annotations.NotNull;
+import org.jitsi.impl.neomedia.NeomediaServiceUtils;
 import org.jitsi.jigasi.stats.*;
 import org.jitsi.jigasi.util.*;
 import org.jitsi.jigasi.xmpp.*;
 import org.jitsi.service.neomedia.*;
 import org.jitsi.impl.neomedia.format.*;
+import org.jitsi.service.neomedia.codec.EncodingConfiguration;
 import org.jitsi.service.neomedia.format.MediaFormat;
 import org.jitsi.service.neomedia.format.MediaFormatFactory;
 import org.jitsi.util.*;
@@ -845,6 +847,20 @@ public class JvbConference
             Console.Log("Jingle factory created");
             MediaService service = JabberActivator.getMediaService();
             Console.Log("Created media service");
+
+
+
+            EncodingConfiguration encodingConfiguration
+                    = NeomediaServiceUtils.getMediaServiceImpl()
+                    .getCurrentEncodingConfiguration();
+
+            MediaFormat[] formatsConfigured = encodingConfiguration.getAllEncodings(MediaType.VIDEO);
+
+            for (int i = 0; i < formatsConfigured.length; i++) {
+                Console.Log(formatsConfigured[i].getEncoding().toString());
+            }
+
+
             MediaFormat format = service.getFormatFactory().createMediaFormat("H264");
             Console.Log("Created media format");
             ArrayList<MediaFormat> formats = new ArrayList<>();
