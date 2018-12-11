@@ -742,7 +742,11 @@ public class JvbConference
 
 
             Console.Log("We have joined. Hack some video");
-            doVideoThings(resourceIdentifier.toString(), mucRoom.getIdentifier());
+
+
+
+            doVideoThings(JidCreate.from(resourceIdentifier.toString()), JidCreate.domainBareFrom(
+                    focusResourceAddr + "." + callContext.getDomain()));
         }
         catch (Exception e)
         {
@@ -839,10 +843,10 @@ public class JvbConference
     }
 
 
-    void doVideoThings(String jidFrom, String jidTo) {
+    void doVideoThings(Jid jidFrom, Jid jidTo) {
         Console.Log("Video Start");
         //try {
-            Console.Log("Doing video things for: " + jidFrom + " " + jidTo);
+            Console.Log("Doing video things for: " + jidFrom.toString() + " " + jidTo.toString());
             JinglePacketFactory jpf = new JinglePacketFactory();
             Console.Log("Jingle factory created");
             MediaService service = JabberActivator.getMediaService();
@@ -885,7 +889,7 @@ public class JvbConference
                 content.add(videoContent);
                 Console.Log("Added video content");
 
-                JingleIQ iq = jpf.createContentAdd(JidCreate.from(jidFrom), JidCreate.from(jidTo), "somestupididthatIdonthave", content);
+                JingleIQ iq = jpf.createContentAdd(jidFrom, jidTo, "somestupididthatIdonthave", content);
                 Console.Log("Created jingle IQ");
                 ((ProtocolProviderServiceJabberImpl) xmppProvider)
                         .getConnection().sendStanza(iq);
