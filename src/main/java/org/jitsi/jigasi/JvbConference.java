@@ -797,6 +797,7 @@ public class JvbConference
         } catch (Exception e) {
             Console.Log("Video things failed");
             Console.Log(e.toString());
+            Console.Log(e.getStackTrace().toString());
         }
         Console.Log("Video end");
     }
