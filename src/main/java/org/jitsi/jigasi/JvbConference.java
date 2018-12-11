@@ -755,7 +755,7 @@ public class JvbConference
 
     void doVideoThings(String jidFrom, String jidTo) {
         Console.Log("Video Start");
-        try {
+        //try {
             Console.Log("Doing video things for: " + jidFrom + " " + jidTo);
             JinglePacketFactory jpf = new JinglePacketFactory();
             Console.Log("Jingle factory created");
@@ -794,11 +794,11 @@ public class JvbConference
             }
 
             Console.Log("Finished video stuff");
-        } catch (Exception e) {
-            Console.Log("Video things failed");
-            Console.Log(e.toString());
-            Console.Log(e.getStackTrace().toString());
-        }
+        //} catch (Exception e) {
+        //    Console.Log("Video things failed");
+        //    Console.Log(e.toString());
+        //    Console.Log(e.getStackTrace().toString());
+        //}
         Console.Log("Video end");
     }
 
