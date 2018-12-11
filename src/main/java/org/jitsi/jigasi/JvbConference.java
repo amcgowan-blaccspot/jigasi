@@ -745,7 +745,7 @@ public class JvbConference
 
 
 
-            doVideoThings(JidCreate.from(resourceIdentifier.toString()), JidCreate.domainBareFrom(
+            doVideoThings(JidCreate.from(resourceIdentifier.toString()), JidCreate.from(
                     roomName + "@conference." + callContext.getDomain() + "/focus"));
         }
         catch (Exception e)
