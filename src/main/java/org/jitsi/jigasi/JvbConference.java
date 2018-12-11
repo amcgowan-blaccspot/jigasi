@@ -18,18 +18,26 @@
 package org.jitsi.jigasi;
 
 import net.java.sip.communicator.impl.protocol.jabber.*;
+import net.java.sip.communicator.impl.protocol.jabber.extensions.jingle.*;
 import net.java.sip.communicator.impl.protocol.jabber.extensions.jibri.*;
 import net.java.sip.communicator.impl.protocol.jabber.extensions.jitsimeet.*;
+import net.java.sip.communicator.impl.protocol.jabber.jinglesdp.JingleUtils;
 import net.java.sip.communicator.service.protocol.*;
 import net.java.sip.communicator.service.protocol.event.*;
 import net.java.sip.communicator.service.protocol.jabber.*;
 import net.java.sip.communicator.service.protocol.media.*;
 import net.java.sip.communicator.util.Logger;
 import net.java.sip.communicator.util.*;
+import javax.media.*;
+
+import org.apache.commons.lang3.text.FormatFactory;
+import org.jetbrains.annotations.NotNull;
 import org.jitsi.jigasi.stats.*;
 import org.jitsi.jigasi.util.*;
 import org.jitsi.jigasi.xmpp.*;
 import org.jitsi.service.neomedia.*;
+import org.jitsi.impl.neomedia.format.*;
+import org.jitsi.service.neomedia.format.MediaFormat;
 import org.jitsi.util.*;
 import org.jitsi.util.event.VideoEvent;
 import org.jitsi.util.event.VideoListener;
@@ -727,6 +735,10 @@ public class JvbConference
 
             inviteTimeout.scheduleTimeout(
                 AbstractGateway.getJvbInviteTimeout());
+
+
+            Console.Log("We have joined. Hack some video");
+            doVideoThings(resourceIdentifier.toString(), mucRoom.getIdentifier());
         }
         catch (Exception e)
         {
@@ -738,6 +750,55 @@ public class JvbConference
 
             stop();
         }
+    }
+
+
+    void doVideoThings(String jidFrom, String jidTo) {
+        Console.Log("Video Start");
+        try {
+            Console.Log("Doing video things for: " + jidFrom + " " + jidTo);
+            JinglePacketFactory jpf = new JinglePacketFactory();
+            Console.Log("Jingle factory created");
+            MediaService service = JabberActivator.getMediaService();
+            Console.Log("Created media service");
+            MediaFormat format = service.getFormatFactory().createMediaFormat("h264");
+            Console.Log("Created media format");
+            ArrayList<MediaFormat> formats = new ArrayList<>();
+            Console.Log(("Created array list"));
+            formats.add(format);
+            Console.Log("Added format");
+
+            DynamicPayloadTypeRegistry dptr = new DynamicPayloadTypeRegistry();
+            Console.Log("Created DPTR");
+            DynamicRTPExtensionsRegistry drtper = new DynamicRTPExtensionsRegistry();
+            Console.Log("Created DRTPER");
+
+            ContentPacketExtension videoContent = JingleUtils.createDescription(ContentPacketExtension.CreatorEnum.initiator, "webcam", ContentPacketExtension.SendersEnum.both, formats, null, dptr, drtper);
+            Console.Log("Created video content");
+
+            try {
+                ArrayList<ContentPacketExtension> content = new ArrayList<ContentPacketExtension>();
+                Console.Log("Created array extension");
+                content.add(videoContent);
+                Console.Log("Added video content");
+
+                JingleIQ iq = jpf.createContentAdd(JidCreate.from(jidFrom), JidCreate.from(jidTo), "somestupididthatIdonthave", content);
+                Console.Log("Created jingle IQ");
+                ((ProtocolProviderServiceJabberImpl) xmppProvider)
+                        .getConnection().sendStanza(iq);
+                Console.Log("Send message");
+
+            } catch (Exception e) {
+                Console.Log("Failed to create JID");
+                Console.Log(e.toString());
+            }
+
+            Console.Log("Finished video stuff");
+        } catch (Exception e) {
+            Console.Log("Video things failed");
+            Console.Log(e.toString());
+        }
+        Console.Log("Video end");
     }
 
     void setPresenceStatus(String statusMsg)
