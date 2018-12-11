@@ -773,7 +773,7 @@ public class JvbConference
             DynamicRTPExtensionsRegistry drtper = new DynamicRTPExtensionsRegistry();
             Console.Log("Created DRTPER");
 
-            ContentPacketExtension videoContent = JingleUtils.createDescription(ContentPacketExtension.CreatorEnum.initiator, "webcam", ContentPacketExtension.SendersEnum.both, formats, null, dptr, drtper);
+            ContentPacketExtension videoContent = JingleUtils.createDescription(ContentPacketExtension.CreatorEnum.initiator, "webcam", ContentPacketExtension.SendersEnum.both, formats, new ArrayList<RTPExtension>(), dptr, drtper);
             Console.Log("Created video content");
 
             try {
