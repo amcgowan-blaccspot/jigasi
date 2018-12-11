@@ -754,7 +754,7 @@ public class JvbConference
     }
 
     public ContentPacketExtension createDescription(ContentPacketExtension.CreatorEnum creator, String contentName, ContentPacketExtension.SendersEnum senders, List<MediaFormat> formats, List<RTPExtension> rtpExtensions, DynamicPayloadTypeRegistry dynamicPayloadTypes, DynamicRTPExtensionsRegistry rtpExtensionsRegistry) {
-        Console.Log("Create Description")
+        Console.Log("Create Description");
         ContentPacketExtension content = new ContentPacketExtension();
         Console.Log("New packet");
         RtpDescriptionPacketExtension description = new RtpDescriptionPacketExtension();
