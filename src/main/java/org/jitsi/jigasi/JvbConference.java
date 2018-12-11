@@ -863,7 +863,7 @@ public class JvbConference
             }
 
 
-            MediaFormat format = service.getFormatFactory().createMediaFormat("H264");
+            MediaFormat format = service.getFormatFactory().createMediaFormat("VP8");
             Console.Log("Created media format");
             ArrayList<MediaFormat> formats = new ArrayList<>();
             Console.Log(("Created array list"));
