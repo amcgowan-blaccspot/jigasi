@@ -38,6 +38,7 @@ import org.jitsi.jigasi.xmpp.*;
 import org.jitsi.service.neomedia.*;
 import org.jitsi.impl.neomedia.format.*;
 import org.jitsi.service.neomedia.format.MediaFormat;
+import org.jitsi.service.neomedia.format.MediaFormatFactory;
 import org.jitsi.util.*;
 import org.jitsi.util.event.VideoEvent;
 import org.jitsi.util.event.VideoListener;
@@ -771,6 +772,22 @@ public class JvbConference
         Console.Log("adding child");
         content.addChildExtension(description);
         Console.Log("Description set");
+        MediaFormat mediaFormat = (MediaFormat)formats.get(0);
+        if (mediaFormat != null) {
+            Console.Log("We have media format");
+            Console.Log(mediaFormat.toString());
+        } else {
+            Console.Log("Null media format");
+            Console.Log(formats.get(0).toString());
+        }
+        if (mediaFormat.getMediaType() != null) {
+            Console.Log("We have media type");
+            Console.Log(mediaFormat.getMediaType().toString());
+        } else {
+            Console.Log("no media type");
+        }
+
+
         description.setMedia(((MediaFormat)formats.get(0)).getMediaType().toString());
         Console.Log("set media");
         Iterator var9 = formats.iterator();
@@ -828,7 +845,7 @@ public class JvbConference
             Console.Log("Jingle factory created");
             MediaService service = JabberActivator.getMediaService();
             Console.Log("Created media service");
-            MediaFormat format = service.getFormatFactory().createMediaFormat("h264");
+            MediaFormat format = service.getFormatFactory().createMediaFormat("H264");
             Console.Log("Created media format");
             ArrayList<MediaFormat> formats = new ArrayList<>();
             Console.Log(("Created array list"));
