@@ -1050,7 +1050,7 @@ public class JvbConference
                     Presence presence
                         = ((ChatRoomMemberJabberImpl) member).getLastPresence();
 
-                    Console.Log("NotifyChanged")
+                    Console.Log("NotifyChanged");
                     gatewaySession.notifyChatRoomMemberUpdated(member, presence);
 
                     Console.Log("Sending something to do with recording.");
