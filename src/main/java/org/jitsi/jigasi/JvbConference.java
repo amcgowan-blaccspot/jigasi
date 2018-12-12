@@ -1693,10 +1693,11 @@ public class JvbConference
                 Console.Log("Potential jingle packet");
                 try {
                     XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-                    factory.setNamespaceAware(true);
+                    //factory.setNamespaceAware(true);
                     XmlPullParser xpp = factory.newPullParser();
 
                     xpp.setInput(new StringReader(packetString));
+                    xpp.next();
 
                     JingleIQ iq = new JingleIQProvider().parse(xpp);
 
@@ -1736,7 +1737,7 @@ public class JvbConference
                     XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
                     factory.setNamespaceAware(true);
                     XmlPullParser xpp = factory.newPullParser();
-
+                    xpp.next();
                     xpp.setInput(new StringReader(packetString));
 
                     JingleIQ iq = new JingleIQProvider().parse(xpp);
