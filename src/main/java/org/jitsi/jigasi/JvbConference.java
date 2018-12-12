@@ -1176,7 +1176,11 @@ public class JvbConference
                 if (iq != null) {
                     if (iq.getSID() != null && this.sessionId != iq.getSID()) {
                         this.sessionId = iq.getSID();
-                        this.doVideoThings(this.myJid, this.focusJid, this.sessionId);
+                        Console.Log("Session ID changed");
+                        if (!isVideoThingsAttempted) {
+                            isVideoThingsAttempted = true;
+                            this.doVideoThings(this.myJid, this.focusJid, this.sessionId);
+                        }
                     }
 
                     Console.Log("---We have JINGLE----");
