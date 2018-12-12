@@ -237,6 +237,7 @@ public abstract class AbstractGatewaySession
      */
     void notifyJvbRoomJoined()
     {
+        Console.Log("Notify JVB joined");
         // set initial participant count
         participantsCount += getJvbChatRoom().getMembersCount();
 

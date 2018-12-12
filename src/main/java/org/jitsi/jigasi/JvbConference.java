@@ -604,6 +604,7 @@ public class JvbConference
         if (xmppProvider.isRegistered())
         {
             Console.Log("JJoining conference");
+
             joinConferenceRoom();
         }
         else
@@ -641,7 +642,9 @@ public class JvbConference
             }
 
             // Join the MUC
+            Console.Log(("Registration state change. Joining conference"));
             joinConferenceRoom();
+            Console.Log("After conference join call");
         }
         else if (evt.getNewState() == RegistrationState.UNREGISTERED)
         {
@@ -744,6 +747,7 @@ public class JvbConference
                 setPresenceStatus(gatewaySession.getDefaultInitStatus());
             }
 
+            Console.Log("Notifying JVB room is joined");
             gatewaySession.notifyJvbRoomJoined();
 
             inviteTimeout.scheduleTimeout(
@@ -920,6 +924,7 @@ public class JvbConference
     {
         if (mucRoom != null)
         {
+            Console.Log("Setting presence status");
             // Send presence status update
             OperationSetJitsiMeetTools jitsiMeetTools
                 = xmppProvider.getOperationSet(
@@ -1019,7 +1024,7 @@ public class JvbConference
         logger.info("Member presence change: "+evt);
 
 
-
+        Console.Log("Member presence changed");
         ChatRoomMember member = evt.getChatRoomMember();
         String eventType = evt.getEventType();
 
@@ -1044,6 +1049,7 @@ public class JvbConference
 
                     gatewaySession.notifyChatRoomMemberUpdated(member, presence);
 
+                    Console.Log("Sending something to do with recording.");
                     RecordingStatus rs = presence.getExtension(
                         RecordingStatus.ELEMENT_NAME,
                         RecordingStatus.NAMESPACE);
@@ -1052,6 +1058,7 @@ public class JvbConference
                         && focusResourceAddr.equals(
                             presence.getFrom().getResourceOrEmpty().toString()))
                     {
+                        Console.Log("Recording changed?");
                         gatewaySession.notifyRecordingStatusChanged(
                             rs.getRecordingMode(), rs.getStatus());
                     }
@@ -1102,6 +1109,7 @@ public class JvbConference
     public void localUserPresenceChanged(
         LocalUserChatRoomPresenceChangeEvent evt)
     {
+        Console.Log("Local user presence changed");
         if (evt.getChatRoom().equals(JvbConference.this.mucRoom)
             && Objects.equals(evt.getEventType(),
                     LocalUserChatRoomPresenceChangeEvent.LOCAL_USER_KICKED))
@@ -1118,11 +1126,13 @@ public class JvbConference
     {
         if (mucRoom != null)
         {
+            Console.Log("Sending presence extension");
             // Send presence update
             OperationSetJitsiMeetTools jitsiMeetTools
                 = xmppProvider.getOperationSet(
                     OperationSetJitsiMeetTools.class);
 
+            Console.Log("Jitsi meet tools extension stuff");
             jitsiMeetTools.sendPresenceExtension(mucRoom, extension);
         }
     }
@@ -1223,6 +1233,7 @@ public class JvbConference
         @Override
         public void incomingCallReceived(CallEvent event)
         {
+            Console.Log("Incoming call received");
             CallPeer peer = event.getSourceCall().getCallPeers().next();
             String peerAddress;
             if (peer == null || peer.getAddress() == null)
@@ -1267,7 +1278,7 @@ public class JvbConference
             inviteTimeout.cancel();
 
 
-
+            Console.Log("JVB call stuff");
             jvbCall = (MediaAwareCall)event.getSourceCall();
             jvbCall.setData(CallContext.class, callContext);
 
@@ -1366,6 +1377,7 @@ public class JvbConference
         @Override
         public synchronized void callStateChanged(CallChangeEvent evt)
         {
+            Console.Log("Call state changed");
             if (jvbCall != evt.getSourceCall())
             {
                 logger.error(
@@ -1377,6 +1389,7 @@ public class JvbConference
             // Once call is started notify SIP gateway
             if (jvbCall.getCallState() == CallState.CALL_IN_PROGRESS)
             {
+                Console.Log("JVB call started call");
                 onJvbCallStarted();
             }
             else if(jvbCall.getCallState() == CallState.CALL_ENDED)

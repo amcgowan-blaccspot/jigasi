@@ -164,7 +164,7 @@ public abstract class AbstractGateway<T extends AbstractGatewaySession>
     public void onJvbRoomJoined(T source)
     {
         sessions.put(source.getCallContext(), source);
-
+        Console.Log("JVBRoomJoined");
         fireGatewaySessionAdded(source);
     }
 
