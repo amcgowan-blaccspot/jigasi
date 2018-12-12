@@ -1487,6 +1487,7 @@ public class JvbConference
     @Override
     public void conferenceFocusChanged(CallPeerConferenceEvent conferenceEvent)
     {
+        Console.Log("Confernce Focus Changed");
         //we don't care?
     }
 
@@ -1496,6 +1497,7 @@ public class JvbConference
     @Override
     public void conferenceMemberAdded(CallPeerConferenceEvent conferenceEvent)
     {
+        Console.Log("Conference Member added");
         ConferenceMember conferenceMember
             = conferenceEvent.getConferenceMember();
 
@@ -1722,6 +1724,40 @@ public class JvbConference
         @Override
         public void processStanza(Stanza packet) throws NotConnectedException, InterruptedException, NotLoggedInException {
             Console.Log("[OUTGOING JVB STANZA]" + packet.toXML().toString());
+
+            Console.Log("Stanza ID: " + packet.getStanzaId());
+
+            //packet.getExtension("jingle", "urn:xmpp:jingle:1");
+            String packetString = packet.toXML().toString();
+
+            if (packetString.contains("<jingle")) {
+                Console.Log("Potential jingle packet");
+                try {
+                    XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+                    factory.setNamespaceAware(true);
+                    XmlPullParser xpp = factory.newPullParser();
+
+                    xpp.setInput(new StringReader(packetString));
+
+                    JingleIQ iq = new JingleIQProvider().parse(xpp);
+
+                    if (iq != null) {
+                        Console.Log("We have JINGLE");
+                        Console.Log("The SID is: " + iq.getSID());
+                    } else {
+                        Console.Log("Couldn't parse a Jingle");
+                    }
+
+                } catch (Exception e) {
+                    Console.Log("Jingle Parsing failed");
+                    Console.Log(e.toString());
+                    Console.Log(e.getMessage());
+                    e.printStackTrace();
+                }
+            } else {
+                Console.Log("Not a Jingle packet");
+            }
+
         }
     }
 
