@@ -1740,6 +1740,10 @@ public class JvbConference
 
                     xpp.setInput(new StringReader(packetString));
                     xpp.next();
+                    while (xpp.next() != xpp.START_TAG) {
+                        Console.Log("Next tag");
+                    }
+
                     JingleIQ iq = new JingleIQProvider().parse(xpp, 10);
 
                     if (iq != null) {
