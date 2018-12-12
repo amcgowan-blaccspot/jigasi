@@ -933,6 +933,7 @@ public class JvbConference
                 = xmppProvider.getOperationSet(
                     OperationSetJitsiMeetTools.class);
 
+            Console.Log("Doing stuff in jitsi meet tools");
             jitsiMeetTools.setPresenceStatus(mucRoom, statusMsg);
         }
     }

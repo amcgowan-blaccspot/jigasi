@@ -17,6 +17,7 @@
  */
 package org.jitsi.jigasi.health;
 
+import org.blaccspot.Console;
 import org.jitsi.jigasi.*;
 import org.jitsi.util.concurrent.*;
 
@@ -44,6 +45,7 @@ public class Health
      */
     public static void start()
     {
+        Console.Log("Sip gateway health check");
         SipGateway sipGateway = null;
         for (AbstractGateway gw : JigasiBundleActivator.getAvailableGateways())
         {
@@ -71,6 +73,7 @@ public class Health
                     @Override
                     public void onReady()
                     {
+                        Console.Log("On ready in health");
                         finalSipGw.removeGatewayListener(this);
                         start();
                     }

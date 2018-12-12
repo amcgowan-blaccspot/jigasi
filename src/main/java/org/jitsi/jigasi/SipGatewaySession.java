@@ -376,6 +376,7 @@ public class SipGatewaySession
 
         if (destination == null)
         {
+            Console.Log("Accept null call");
             CallManager.acceptCall(call);
         }
         else
@@ -405,6 +406,7 @@ public class SipGatewaySession
                 @Override
                 public void outgoingCallCreated(CallEvent callEvent)
                 {
+                    Console.Log("Creating outgoing call");
                     String roomName = getJvbRoomName();
                     if(roomName != null)
                     {
@@ -428,6 +430,7 @@ public class SipGatewaySession
             });
             try
             {
+                Console.Log("Trigger creation of call");
                 this.call = tele.createCall(destination);
                 call.setData(CallContext.class,  super.callContext);
 
@@ -439,7 +442,7 @@ public class SipGatewaySession
 
                 logger.info(
                     "Created outgoing call to " + destination + " " + call);
-
+                Console.Log("Adding Call change listner");
                 this.call.addCallChangeListener(callStateListener);
                 // lets add cs to outgoing call
                 if (statsHandler == null)
@@ -451,6 +454,7 @@ public class SipGatewaySession
                 //FIXME: It might be already in progress or ended ?!
                 if (!CallState.CALL_INITIALIZATION.equals(call.getCallState()))
                 {
+                    Console.Log("Handle call state");
                     callStateListener.handleCallState(call, null);
                 }
             }
@@ -823,6 +827,7 @@ public class SipGatewaySession
         @Override
         public void peerStateChanged(final CallPeerChangeEvent evt)
         {
+            Console.Log("Peer state changed");
             CallPeerState callPeerState = (CallPeerState)evt.getNewValue();
             String stateString = callPeerState.getStateString();
 
@@ -831,6 +836,7 @@ public class SipGatewaySession
                     "no-call-ctx" : callContext.getCallResource())
                 + " SIP peer state: " + stateString);
 
+            Console.Log("Setting presence status");
             if (jvbConference != null)
                 jvbConference.setPresenceStatus(stateString);
 

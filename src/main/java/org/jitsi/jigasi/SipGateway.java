@@ -101,12 +101,14 @@ public class SipGateway
     @Override
     public void registrationStateChanged(RegistrationStateChangeEvent evt)
     {
+        Console.Log("Registration state changed");
         ProtocolProviderService pps = evt.getProvider();
 
         logger.info("REG STATE CHANGE " + pps + " -> " + evt);
 
         if (evt.getNewState().equals(RegistrationState.REGISTERED))
         {
+            Console.Log("Gateway ready");
             fireGatewayReady();
         }
     }
@@ -185,6 +187,7 @@ public class SipGateway
             synchronized (syncRoot)
             {
 
+                Console.Log("IncomingCall received");
                 Call call = event.getSourceCall();
 
                 logger.info("Incoming call received...");

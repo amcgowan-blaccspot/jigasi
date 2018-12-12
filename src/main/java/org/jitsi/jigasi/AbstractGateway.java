@@ -329,6 +329,7 @@ public abstract class AbstractGateway<T extends AbstractGatewaySession>
      */
     void fireGatewayReady()
     {
+        Console.Log("Gateway ready event");
         Iterable<GatewayListener> listeners;
         synchronized (gatewayListeners)
         {
@@ -338,6 +339,7 @@ public abstract class AbstractGateway<T extends AbstractGatewaySession>
 
         for (GatewayListener listener : listeners)
         {
+            Console.Log("Calling some onReady gateway listener");
             listener.onReady();
         }
     }
