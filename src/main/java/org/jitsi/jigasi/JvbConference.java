@@ -56,7 +56,11 @@ import org.jxmpp.stringprep.*;
 import org.osgi.framework.*;
 
 import org.blaccspot.Console;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.StringReader;
 import java.net.URI;
 import java.util.*;
 
@@ -1677,6 +1681,40 @@ public class JvbConference
         @Override
         public void processStanza(Stanza packet) throws NotConnectedException, InterruptedException, NotLoggedInException {
             Console.Log("[INCOMING JVB STANZA]" + packet.toXML().toString());
+
+            Console.Log("Stanza ID: " + packet.getStanzaId());
+
+            //packet.getExtension("jingle", "urn:xmpp:jingle:1");
+            String packetString = packet.toXML().toString();
+
+            if (packetString.contains("<jingle")) {
+                Console.Log("Potential jingle packet");
+                try {
+                    XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+                    factory.setNamespaceAware(true);
+                    XmlPullParser xpp = factory.newPullParser();
+
+                    xpp.setInput(new StringReader(packetString));
+
+                    JingleIQ iq = new JingleIQProvider().parse(xpp);
+
+                    if (iq != null) {
+                        Console.Log("We have JINGLE");
+                        Console.Log("The SID is: " + iq.getSID());
+                    } else {
+                        Console.Log("Couldn't parse a Jingle");
+                    }
+
+                } catch (Exception e) {
+                    Console.Log("Jingle Parsing failed");
+                    Console.Log(e.toString());
+                    Console.Log(e.getMessage());
+                    e.printStackTrace();
+                }
+            } else {
+                Console.Log("Not a Jingle packet");
+            }
+
         }
     }
 
