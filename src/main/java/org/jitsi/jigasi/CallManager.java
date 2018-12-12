@@ -18,6 +18,7 @@
 package org.jitsi.jigasi;
 
 import net.java.sip.communicator.impl.protocol.jabber.OperationSetVideoTelephonyJabberImpl;
+import net.java.sip.communicator.impl.protocol.sip.CallPeerSipImpl;
 import net.java.sip.communicator.service.protocol.*;
 import net.java.sip.communicator.service.protocol.media.*;
 import net.java.sip.communicator.util.*;
@@ -284,7 +285,8 @@ public class CallManager
 
             while (peers.hasNext())
             {
-                CallPeer peer = peers.next();
+                //CallPeer peer = peers.next();
+                CallPeerSipImpl peer = (CallPeerSipImpl)peers.next();
 
                 if (video)
                 {
@@ -294,6 +296,7 @@ public class CallManager
                     try
                     {
                         Console.Log("Answering video call");
+                        peer.getMediaHandler().setLocalVideoTransmissionEnabled(true);
                         telephony.answerVideoCallPeer(peer);
                     }
                     catch (OperationFailedException ofe)

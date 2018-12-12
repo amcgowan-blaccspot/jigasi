@@ -1322,6 +1322,8 @@ public class JvbConference
                     .setDisableHolePunching(true);
             }
 
+
+
             Console.Log("[IC] Getting video telephony operation set");
             OperationSetVideoTelephony videoTelephony
                     = xmppProvider.getOperationSet(OperationSetVideoTelephony.class);
@@ -1343,6 +1345,7 @@ public class JvbConference
 
                     if (CallPeerState.CONNECTED.equals(peerState))
                     {
+                        Console.Log("Advertising SSRCs for peer");
                         advertisePeerSSRCs(peer);
                     }
                 }
