@@ -78,6 +78,7 @@ public class JvbConference
     implements RegistrationStateChangeListener,
                ServiceListener,
                ChatRoomMemberPresenceListener,
+               ChatRoomInvitationListener,
                LocalUserChatRoomPresenceListener,
                CallPeerConferenceListener,
                StanzaListener
@@ -677,6 +678,7 @@ public class JvbConference
         OperationSetMultiUserChat muc
             = xmppProvider.getOperationSet(OperationSetMultiUserChat.class);
         muc.addPresenceListener(this);
+        muc.addInvitationListener(this);
 
         Console.Log("Joining conference room");
 
@@ -724,6 +726,7 @@ public class JvbConference
             this.mucRoom = mucRoom;
 
             mucRoom.addMemberPresenceListener(this);
+
 
             String displayName = gatewaySession.getMucDisplayName();
             if (displayName != null)
@@ -1036,7 +1039,7 @@ public class JvbConference
                     .equals(eventType))
             {
                 leaveTimeout.cancel();
-
+                Console.Log("NotifyUpdated");
                 gatewaySession.notifyChatRoomMemberJoined(member);
             }
             else if(ChatRoomMemberPresenceChangeEvent.MEMBER_UPDATED
@@ -1047,6 +1050,7 @@ public class JvbConference
                     Presence presence
                         = ((ChatRoomMemberJabberImpl) member).getLastPresence();
 
+                    Console.Log("NotifyChanged")
                     gatewaySession.notifyChatRoomMemberUpdated(member, presence);
 
                     Console.Log("Sending something to do with recording.");
@@ -1099,6 +1103,8 @@ public class JvbConference
                 stop();
             }
         }
+
+        Console.Log("End Member Presence Changed Listener");
     }
 
     /**
@@ -1209,6 +1215,11 @@ public class JvbConference
             Console.Log("Not a Jingle packet");
         }
 
+    }
+
+    @Override
+    public void invitationReceived(ChatRoomInvitationReceivedEvent evt) {
+        Console.Log("Chatroom invitation listener event");
     }
 
     private class JvbVideoListener
