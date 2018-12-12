@@ -1737,9 +1737,9 @@ public class JvbConference
                     XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
                     factory.setNamespaceAware(true);
                     XmlPullParser xpp = factory.newPullParser();
-                    xpp.next();
-                    xpp.setInput(new StringReader(packetString));
 
+                    xpp.setInput(new StringReader(packetString));
+                    xpp.next();
                     JingleIQ iq = new JingleIQProvider().parse(xpp);
 
                     if (iq != null) {
