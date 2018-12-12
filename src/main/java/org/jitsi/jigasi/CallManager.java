@@ -17,6 +17,7 @@
  */
 package org.jitsi.jigasi;
 
+import net.java.sip.communicator.impl.protocol.jabber.OperationSetVideoTelephonyJabberImpl;
 import net.java.sip.communicator.service.protocol.*;
 import net.java.sip.communicator.service.protocol.media.*;
 import net.java.sip.communicator.util.*;
@@ -292,6 +293,7 @@ public class CallManager
 
                     try
                     {
+                        Console.Log("Answering video call");
                         telephony.answerVideoCallPeer(peer);
                     }
                     catch (OperationFailedException ofe)
@@ -309,6 +311,7 @@ public class CallManager
 
                     try
                     {
+                        Console.Log("Answering audio call");
                         telephony.answerCallPeer(peer);
                     }
                     catch (OperationFailedException ofe)
