@@ -1697,7 +1697,7 @@ public class JvbConference
                     XmlPullParser xpp = factory.newPullParser();
 
                     xpp.setInput(new StringReader(packetString));
-                    xpp.next();
+                    //xpp.next();
 
                     JingleIQ iq = new JingleIQProvider().parse(xpp, 10);
 
@@ -1739,7 +1739,7 @@ public class JvbConference
                     XmlPullParser xpp = factory.newPullParser();
 
                     xpp.setInput(new StringReader(packetString));
-                    xpp.next();
+                    //xpp.next();
                     JingleIQ iq = new JingleIQProvider().parse(xpp, 10);
 
                     if (iq != null) {
