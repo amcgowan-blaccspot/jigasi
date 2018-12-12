@@ -21,6 +21,7 @@ import net.java.sip.communicator.service.protocol.*;
 import net.java.sip.communicator.service.protocol.event.*;
 import net.java.sip.communicator.service.shutdown.*;
 import net.java.sip.communicator.util.*;
+import org.blaccspot.Console;
 import org.jxmpp.jid.*;
 import org.osgi.framework.*;
 
@@ -270,6 +271,7 @@ public abstract class AbstractGateway<T extends AbstractGatewaySession>
      */
     private void fireGatewaySessionAdded(AbstractGatewaySession session)
     {
+        Console.Log("Gateway session added");
         Iterable<GatewayListener> listeners;
         synchronized (gatewayListeners)
         {

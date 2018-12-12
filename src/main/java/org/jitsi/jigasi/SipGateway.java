@@ -20,6 +20,7 @@ package org.jitsi.jigasi;
 import net.java.sip.communicator.service.protocol.*;
 import net.java.sip.communicator.service.protocol.event.*;
 import net.java.sip.communicator.util.*;
+import org.blaccspot.Console;
 import org.jitsi.jigasi.util.*;
 import org.osgi.framework.*;
 
@@ -167,6 +168,7 @@ public class SipGateway
      */
     public SipGatewaySession createOutgoingCall(CallContext ctx)
     {
+        Console.Log("Creating Outgoing sip call");
         SipGatewaySession outgoingSession = new SipGatewaySession(this, ctx);
         outgoingSession.addListener(this);
         outgoingSession.createOutgoingCall();

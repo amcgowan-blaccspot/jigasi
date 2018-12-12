@@ -19,6 +19,7 @@ package org.jitsi.jigasi.xmpp;
 
 import net.java.sip.communicator.impl.protocol.jabber.extensions.rayo.RayoIqProvider.*;
 import net.java.sip.communicator.util.*;
+import org.blaccspot.Console;
 import org.jitsi.jigasi.*;
 import org.jitsi.service.configuration.*;
 import org.jivesoftware.smack.packet.*;
@@ -211,6 +212,7 @@ public class CallControl
                     XMPPError.Condition.not_acceptable.toString());
             }
 
+            Console.Log("Creating sip gateway");
             session = sipGateway.createOutgoingCall(ctx);
         }
 
@@ -218,7 +220,7 @@ public class CallControl
         {
             createdSession[0] = session;
         }
-
+        Console.Log("Confirming dial - this is component stuff");
         return RefIq.createResult(iq, "xmpp:" + ctx.getCallResource());
     }
 

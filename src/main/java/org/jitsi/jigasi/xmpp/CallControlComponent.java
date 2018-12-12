@@ -20,6 +20,7 @@ package org.jitsi.jigasi.xmpp;
 import net.java.sip.communicator.impl.protocol.jabber.extensions.rayo.RayoIqProvider.*;
 import net.java.sip.communicator.service.protocol.*;
 import net.java.sip.communicator.util.*;
+import org.blaccspot.Console;
 import org.jitsi.jigasi.*;
 import org.jitsi.meet.*;
 import org.jitsi.service.configuration.*;
@@ -324,6 +325,7 @@ public class CallControlComponent
             {
                 if (smackIq instanceof DialIq)
                 {
+                    Console.Log("Starting call");
                     resultIQ = callControl.handleDialIq((DialIq)smackIq, ctx,
                         null);
                 }

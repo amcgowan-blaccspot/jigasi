@@ -22,6 +22,7 @@ import net.java.sip.communicator.service.protocol.*;
 import net.java.sip.communicator.service.protocol.event.*;
 import net.java.sip.communicator.service.protocol.media.*;
 import net.java.sip.communicator.util.Logger;
+import org.blaccspot.Console;
 import org.jitsi.jigasi.stats.*;
 import org.jitsi.jigasi.util.*;
 import org.jitsi.service.neomedia.*;
@@ -260,7 +261,7 @@ public class SipGatewaySession
         }
 
         this.destination = callContext.getDestination();
-
+        Console.Log("Child create outgoing");
         // connect to muc
         super.createOutgoingCall();
     }

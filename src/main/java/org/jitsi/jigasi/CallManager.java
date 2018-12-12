@@ -20,6 +20,7 @@ package org.jitsi.jigasi;
 import net.java.sip.communicator.service.protocol.*;
 import net.java.sip.communicator.service.protocol.media.*;
 import net.java.sip.communicator.util.*;
+import org.blaccspot.Console;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -40,7 +41,7 @@ public class CallManager
     public synchronized static void acceptCall(Call incomingCall)
     {
         threadPool.submit(
-            new AnswerCallThread(incomingCall, null, false));
+            new AnswerCallThread(incomingCall, null, true));
     }
 
     /**
@@ -126,6 +127,7 @@ public class CallManager
         @Override
         public void run()
         {
+            Console.Log("Invite to conference thread");
             CallConference conference
                 = (call == null) ? null : call.getConference();
 
@@ -272,6 +274,7 @@ public class CallManager
         @Override
         public void run()
         {
+            Console.Log("Answer Call Thread");
             if (existingCall != null)
                 call.setConference(existingCall.getConference());
 
@@ -559,6 +562,7 @@ public class CallManager
              * There is only an OperationSet which hangs up a CallPeer at a time
              * so prepare a list of all CallPeers to be hanged up.
              */
+            Console.Log("Hangup Call thread");
             Set<CallPeer> peers = new HashSet<CallPeer>();
 
             if (call != null)
