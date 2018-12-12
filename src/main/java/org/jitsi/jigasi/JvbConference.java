@@ -79,7 +79,8 @@ public class JvbConference
                ServiceListener,
                ChatRoomMemberPresenceListener,
                LocalUserChatRoomPresenceListener,
-               CallPeerConferenceListener
+               CallPeerConferenceListener,
+               StanzaListener
 {
     /**
      * The logger.
@@ -228,7 +229,6 @@ public class JvbConference
      * Intercept all xmpp messages
      */
     private final JvbStanzaListener stanzaListener = new JvbStanzaListener();
-    private final JvbStanzaSendListener stanzaSendListener = new JvbStanzaSendListener();
     private final JvbStanzaInterceptListener stanzaInterceptListener = new JvbStanzaInterceptListener();
     private final AllStanzaFilter stanzaFilter = new AllStanzaFilter();
 
@@ -285,6 +285,11 @@ public class JvbConference
      * The stats handler that handles statistics on the jvb side.
      */
     private StatsHandler statsHandler = null;
+
+    private String sessionId;
+    private Jid focusJid;
+    private Jid myJid;
+    private Boolean isVideoThingsAttempted = false;
 
     /**
      * Creates new instance of <tt>JvbConference</tt>
@@ -621,7 +626,7 @@ public class JvbConference
                 if (jabberImpl != null) {
                     if (jabberImpl.getConnection() != null) {
 
-                        jabberImpl.getConnection().addStanzaSendingListener(stanzaSendListener, stanzaFilter);
+                        jabberImpl.getConnection().addStanzaSendingListener(this, stanzaFilter);
                         jabberImpl.getConnection().addStanzaInterceptor(stanzaInterceptListener,  stanzaFilter);
                         jabberImpl.getConnection().addAsyncStanzaListener(stanzaListener, stanzaFilter);
 
@@ -747,10 +752,8 @@ public class JvbConference
 
             Console.Log("We have joined. Hack some video");
 
-
-
-            doVideoThings(JidCreate.from(resourceIdentifier.toString()), JidCreate.from(
-                    roomName + "/focus"));
+            this.myJid = JidCreate.from(resourceIdentifier.toString());
+            this.focusJid = JidCreate.from(roomName + "/focus" );
         }
         catch (Exception e)
         {
@@ -847,7 +850,7 @@ public class JvbConference
     }
 
 
-    void doVideoThings(Jid jidFrom, Jid jidTo) {
+    void doVideoThings(Jid jidFrom, Jid jidTo, String sessionId) {
         Console.Log("Video Start");
         //try {
             Console.Log("Doing video things for: " + jidFrom.toString() + " " + jidTo.toString());
@@ -893,7 +896,7 @@ public class JvbConference
                 content.add(videoContent);
                 Console.Log("Added video content");
 
-                JingleIQ iq = jpf.createContentAdd(jidFrom, jidTo, "somestupididthatIdonthave", content);
+                JingleIQ iq = jpf.createContentAdd(jidFrom, jidTo, sessionId, content);
                 Console.Log("Created jingle IQ");
                 ((ProtocolProviderServiceJabberImpl) xmppProvider)
                         .getConnection().sendStanza(iq);
@@ -1144,6 +1147,54 @@ public class JvbConference
     {
 
         return callContext.getMeetingUrl();
+    }
+
+    @Override
+    public void processStanza(Stanza packet) throws NotConnectedException, InterruptedException, NotLoggedInException {
+        Console.Log("[OUTGOING JVB STANZA]" + packet.toXML().toString());
+
+        Console.Log("Stanza ID: " + packet.getStanzaId());
+
+        //packet.getExtension("jingle", "urn:xmpp:jingle:1");
+        String packetString = packet.toXML().toString();
+
+        if (packetString.contains("<jingle")) {
+            Console.Log("Potential jingle packet");
+            try {
+                XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+                factory.setNamespaceAware(true);
+                XmlPullParser xpp = factory.newPullParser();
+
+                xpp.setInput(new StringReader(packetString));
+                xpp.next();
+                while (xpp.next() != xpp.START_TAG) {
+                    Console.Log("Next tag");
+                }
+
+                JingleIQ iq = new JingleIQProvider().parse(xpp, 10);
+
+                if (iq != null) {
+                    if (iq.getSID() != null && this.sessionId != iq.getSID()) {
+                        this.sessionId = iq.getSID();
+                        this.doVideoThings(this.myJid, this.focusJid, this.sessionId);
+                    }
+
+                    Console.Log("---We have JINGLE----");
+                    Console.Log("The SID is: " + iq.getSID());
+                } else {
+                    Console.Log("Couldn't parse a Jingle");
+                }
+
+            } catch (Exception e) {
+                Console.Log("Jingle Parsing failed");
+                Console.Log(e.toString());
+                Console.Log(e.getMessage());
+                e.printStackTrace();
+            }
+        } else {
+            Console.Log("Not a Jingle packet");
+        }
+
     }
 
     private class JvbVideoListener
@@ -1703,53 +1754,6 @@ public class JvbConference
 
                     if (iq != null) {
                         Console.Log("We have JINGLE");
-                        Console.Log("The SID is: " + iq.getSID());
-                    } else {
-                        Console.Log("Couldn't parse a Jingle");
-                    }
-
-                } catch (Exception e) {
-                    Console.Log("Jingle Parsing failed");
-                    Console.Log(e.toString());
-                    Console.Log(e.getMessage());
-                    e.printStackTrace();
-                }
-            } else {
-                Console.Log("Not a Jingle packet");
-            }
-
-        }
-    }
-
-    class JvbStanzaSendListener implements StanzaListener {
-        @Override
-        public void processStanza(Stanza packet) throws NotConnectedException, InterruptedException, NotLoggedInException {
-            Console.Log("[OUTGOING JVB STANZA]" + packet.toXML().toString());
-
-            Console.Log("Stanza ID: " + packet.getStanzaId());
-
-            //packet.getExtension("jingle", "urn:xmpp:jingle:1");
-            String packetString = packet.toXML().toString();
-
-            if (packetString.contains("<jingle")) {
-                Console.Log("Potential jingle packet");
-                try {
-                    XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-                    factory.setNamespaceAware(true);
-                    XmlPullParser xpp = factory.newPullParser();
-
-                    xpp.setInput(new StringReader(packetString));
-                    xpp.next();
-                    while (xpp.next() != xpp.START_TAG) {
-                        Console.Log("Next tag");
-                    }
-
-                    JingleIQ iq = new JingleIQProvider().parse(xpp, 10);
-
-                    if (iq != null) {
-                        Console.Log("---We have JINGLE----");
-                    //    Console.Log("The IQ is: " + iq.toXML());
-                      //  Console.Log("Session info: " + iq.getSessionInfo());
                         Console.Log("The SID is: " + iq.getSID());
                     } else {
                         Console.Log("Couldn't parse a Jingle");
