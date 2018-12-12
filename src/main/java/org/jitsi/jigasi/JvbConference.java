@@ -1743,7 +1743,9 @@ public class JvbConference
                     JingleIQ iq = new JingleIQProvider().parse(xpp);
 
                     if (iq != null) {
-                        Console.Log("We have JINGLE");
+                        Console.Log("---We have JINGLE----");
+                        Console.Log("The IQ is: " + iq.toXML());
+                        Console.Log("Session info: " + iq.getSessionInfo().toXML());
                         Console.Log("The SID is: " + iq.getSID());
                     } else {
                         Console.Log("Couldn't parse a Jingle");
