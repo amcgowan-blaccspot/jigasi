@@ -1697,7 +1697,7 @@ public class JvbConference
                     XmlPullParser xpp = factory.newPullParser();
 
                     xpp.setInput(new StringReader(packetString));
-                    //xpp.next();
+                    xpp.next();
 
                     JingleIQ iq = new JingleIQProvider().parse(xpp, 10);
 
@@ -1739,13 +1739,13 @@ public class JvbConference
                     XmlPullParser xpp = factory.newPullParser();
 
                     xpp.setInput(new StringReader(packetString));
-                    //xpp.next();
+                    xpp.next();
                     JingleIQ iq = new JingleIQProvider().parse(xpp, 10);
 
                     if (iq != null) {
                         Console.Log("---We have JINGLE----");
-                        Console.Log("The IQ is: " + iq.toXML());
-                        Console.Log("Session info: " + iq.getSessionInfo());
+                    //    Console.Log("The IQ is: " + iq.toXML());
+                      //  Console.Log("Session info: " + iq.getSessionInfo());
                         Console.Log("The SID is: " + iq.getSID());
                     } else {
                         Console.Log("Couldn't parse a Jingle");
