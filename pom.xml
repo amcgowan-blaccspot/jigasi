@@ -138,7 +138,7 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>jitsi-util</artifactId>
-      <version>${jitsi-desktop.version}</version>
+      <version>${jitsi-snapshot.version}</version>
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
