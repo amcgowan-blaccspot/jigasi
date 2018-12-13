@@ -1337,14 +1337,15 @@ public class JvbConference
 
 
 
-            Console.Log("[IC] Getting video telephony operation set");
+            /*Console.Log("[IC] Getting video telephony operation set");
             OperationSetVideoTelephony videoTelephony
                     = xmppProvider.getOperationSet(OperationSetVideoTelephony.class);
             Console.Log("[IC] Video telephony loaded");
             Console.Log("[IC] Adding video listener");
             videoTelephony.addVideoListener(peer, new JvbVideoListener());
             Console.Log("[IC] Video listener has been added");
-
+            */
+            
             peer.addCallPeerListener(new CallPeerAdapter()
             {
                 @Override
