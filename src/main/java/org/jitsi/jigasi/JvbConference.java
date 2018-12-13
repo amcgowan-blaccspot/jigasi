@@ -28,22 +28,16 @@ import net.java.sip.communicator.service.protocol.jabber.*;
 import net.java.sip.communicator.service.protocol.media.*;
 import net.java.sip.communicator.util.Logger;
 import net.java.sip.communicator.util.*;
-import javax.media.*;
 
-import org.apache.commons.lang3.text.FormatFactory;
-import org.jetbrains.annotations.NotNull;
-import org.jitsi.impl.neomedia.NeomediaServiceUtils;
+
 import org.jitsi.jigasi.stats.*;
 import org.jitsi.jigasi.util.*;
 import org.jitsi.jigasi.xmpp.*;
 import org.jitsi.service.neomedia.*;
-import org.jitsi.impl.neomedia.format.*;
-import org.jitsi.service.neomedia.codec.EncodingConfiguration;
-import org.jitsi.service.neomedia.format.MediaFormat;
-import org.jitsi.service.neomedia.format.MediaFormatFactory;
+
+
 import org.jitsi.util.*;
-import org.jitsi.util.event.VideoEvent;
-import org.jitsi.util.event.VideoListener;
+
 import org.jivesoftware.smack.SmackException.*;
 import org.jivesoftware.smack.StanzaListener;
 import org.jivesoftware.smack.packet.*;
@@ -781,7 +775,7 @@ public class JvbConference
             stop();
         }
     }
-
+/*
     public ContentPacketExtension createDescription(ContentPacketExtension.CreatorEnum creator, String contentName, ContentPacketExtension.SendersEnum senders, List<MediaFormat> formats, List<RTPExtension> rtpExtensions, DynamicPayloadTypeRegistry dynamicPayloadTypes, DynamicRTPExtensionsRegistry rtpExtensionsRegistry) {
         Console.Log("Create Description");
         ContentPacketExtension content = new ContentPacketExtension();
@@ -800,6 +794,7 @@ public class JvbConference
         Console.Log("adding child");
         content.addChildExtension(description);
         Console.Log("Description set");
+
         MediaFormat mediaFormat = (MediaFormat)formats.get(0);
         if (mediaFormat != null) {
             Console.Log("We have media format");
@@ -863,8 +858,8 @@ public class JvbConference
 
         return content;
     }
-
-
+*/
+/*
     void doVideoThings(Jid jidFrom, Jid jidTo, String sessionId) {
         Console.Log("Video Start");
         //try {
@@ -930,7 +925,7 @@ public class JvbConference
         //}
         Console.Log("Video end");
     }
-
+*/
     void setPresenceStatus(String statusMsg)
     {
         if (mucRoom != null)
@@ -1236,7 +1231,7 @@ public class JvbConference
         Console.Log("Chatroom invitation listener event");
     }
 
-    private class JvbVideoListener
+    /*private class JvbVideoListener
         implements VideoListener
     {
         public void videoAdded(VideoEvent event) {
@@ -1250,7 +1245,7 @@ public class JvbConference
         public void videoUpdate(VideoEvent event) {
             Console.Log("[JVB VL] - Video Updated");
         }
-    }
+    }*/
 
     private class JvbCallListener
         implements CallListener
@@ -1381,6 +1376,7 @@ public class JvbConference
 
         @Override
         public void outgoingCallCreated(CallEvent event) {
+            /*
             Console.Log("[OG] Getting Peer");
             CallPeer peer = event.getSourceCall().getCallPeers().next();
             Console.Log("[OG] Peer was found");
@@ -1392,6 +1388,7 @@ public class JvbConference
             Console.Log("[OG] Adding video listener");
             videoTelephony.addVideoListener(peer, new JvbVideoListener());
             Console.Log("[OG] Video listener has been added");
+            */
         }
 
         @Override

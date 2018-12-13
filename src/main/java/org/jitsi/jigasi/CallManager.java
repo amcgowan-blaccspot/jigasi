@@ -17,8 +17,6 @@
  */
 package org.jitsi.jigasi;
 
-import net.java.sip.communicator.impl.protocol.jabber.OperationSetVideoTelephonyJabberImpl;
-import net.java.sip.communicator.impl.protocol.sip.CallPeerSipImpl;
 import net.java.sip.communicator.service.protocol.*;
 import net.java.sip.communicator.service.protocol.media.*;
 import net.java.sip.communicator.util.*;
