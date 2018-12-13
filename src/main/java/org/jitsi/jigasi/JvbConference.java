@@ -313,6 +313,7 @@ public class JvbConference
      */
     private void advertisePeerSSRCs(CallPeer peer)
     {
+        Console.Log("Advertise ssrcs");
         String audioSSRC = getPeerSSRCforMedia(peer,
                                                MediaType.AUDIO);
         String videoSSRC = getPeerSSRCforMedia(peer,
@@ -332,7 +333,7 @@ public class JvbConference
 
             ssrc.setMediaType(MediaType.AUDIO.toString());
             ssrc.setSSRC(audioSSRC);
-
+            Console.Log("Adding media presence extension");
             mediaPresence.addChildExtension(ssrc);
         }
 
@@ -347,6 +348,7 @@ public class JvbConference
             mediaPresence.addChildExtension(ssrc);
         }
 
+        Console.Log("Sending presence extension");
         sendPresenceExtension(mediaPresence);
     }
 
@@ -430,6 +432,7 @@ public class JvbConference
      */
     private String getPeerSSRCforMedia(CallPeer peer, MediaType mediaType)
     {
+        Console.Log("Get Peer SSRC");
         if (!(peer instanceof MediaAwareCallPeer))
             return null;
 
@@ -960,6 +963,7 @@ public class JvbConference
 
     private void onJvbCallStarted()
     {
+        Console.Log("JVB Call Started");
         logger.info("JVB conference call IN_PROGRESS "
             + callContext.getRoomName());
 
@@ -1139,7 +1143,7 @@ public class JvbConference
                 = xmppProvider.getOperationSet(
                     OperationSetJitsiMeetTools.class);
 
-            Console.Log("Jitsi meet tools extension stuff");
+            Console.Log("--Jitsi meet tools extension stuff");
             jitsiMeetTools.sendPresenceExtension(mucRoom, extension);
         }
     }

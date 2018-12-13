@@ -20,6 +20,7 @@ package org.jitsi.jigasi;
 import net.java.sip.communicator.impl.configuration.*;
 import net.java.sip.communicator.service.protocol.*;
 
+import org.blaccspot.Console;
 import org.jitsi.cmd.*;
 import org.jitsi.jigasi.osgi.*;
 import org.jitsi.jigasi.xmpp.*;
@@ -27,6 +28,10 @@ import org.jitsi.meet.*;
 import org.jitsi.service.configuration.*;
 import org.jitsi.service.neomedia.*;
 import org.jitsi.util.*;
+
+import net.java.sip.communicator.util.*;
+
+
 
 /**
  * FIXME: update description
@@ -149,6 +154,10 @@ public class Main
     public static void main(String[] args)
         throws ParseException
     {
+
+        Console.Log("Test forked sip communicator");
+        net.java.sip.communicator.util.Console.Log("Test - This should show up and build.");
+
         // Parse the command-line arguments.
         CmdLine cmdLine = new CmdLine();
 
