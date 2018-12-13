@@ -155,6 +155,9 @@ public class Main
         throws ParseException
     {
 
+
+
+
         Console.Log("Test forked sip communicator");
         net.java.sip.communicator.util.Console.Log("Test - This should show up and build.");
 

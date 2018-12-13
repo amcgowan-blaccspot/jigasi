@@ -300,6 +300,7 @@ public class JvbConference
      */
     public JvbConference(AbstractGatewaySession gatewaySession, CallContext ctx)
     {
+
         this.gatewaySession = gatewaySession;
         this.callContext = ctx;
 
@@ -488,17 +489,21 @@ public class JvbConference
         {
             ProtocolProviderService candidate
                 = JigasiBundleActivator.osgiContext.getService(serviceRef);
-
+            Console.Log("Chhecking provider");
             if (ProtocolNames.JABBER.equals(candidate.getProtocolName()))
             {
+                Console.Log("It's jabber");
                 if (candidate.getAccountID()
                     .getAccountUniqueID()
                     .equals(xmppAccount.getAccountUniqueID()))
                 {
+                    Console.Log("It's my jabber");
                     setXmppProvider(candidate);
 
                     if (this.xmppProvider != null)
                     {
+                        Console.Log("We have xmpp provider");
+                        Console.Log("Connection is: " + ((ProtocolProviderServiceJabberImpl)xmppProvider).getConnection());
                         break;
                     }
                 }
@@ -1007,9 +1012,11 @@ public class JvbConference
     @Override
     public void serviceChanged(ServiceEvent serviceEvent)
     {
+        Console.Log("Service changed event");
         if (serviceEvent.getType() != ServiceEvent.REGISTERED)
             return;
 
+        Console.Log("Service registrated");
         ServiceReference<?> ref = serviceEvent.getServiceReference();
 
         Object service = JigasiBundleActivator.osgiContext.getService(ref);
@@ -1017,11 +1024,13 @@ public class JvbConference
         if (!(service instanceof ProtocolProviderService))
             return;
 
+        Console.Log("Some new service");
         ProtocolProviderService pps = (ProtocolProviderService) service;
 
         if (xmppProvider == null &&
             ProtocolNames.JABBER.equals(pps.getProtocolName()))
         {
+            Console.Log("It's jabber");
             setXmppProvider(pps);
         }
     }
