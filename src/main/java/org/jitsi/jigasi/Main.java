@@ -158,8 +158,8 @@ public class Main
 
 
 
-        Console.Log("Test forked sip communicator");
-        net.java.sip.communicator.util.Console.Log("Test - This should show up and build.");
+        //Console.Log("Test forked sip communicator");
+        //net.java.sip.communicator.util.Console.Log("Test - This should show up and build.");
 
         // Parse the command-line arguments.
         CmdLine cmdLine = new CmdLine();
