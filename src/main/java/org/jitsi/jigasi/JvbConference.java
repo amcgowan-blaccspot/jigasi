@@ -21,7 +21,6 @@ import net.java.sip.communicator.impl.protocol.jabber.*;
 import net.java.sip.communicator.impl.protocol.jabber.extensions.jingle.*;
 import net.java.sip.communicator.impl.protocol.jabber.extensions.jibri.*;
 import net.java.sip.communicator.impl.protocol.jabber.extensions.jitsimeet.*;
-import net.java.sip.communicator.impl.protocol.jabber.jinglesdp.JingleUtils;
 import net.java.sip.communicator.service.protocol.*;
 import net.java.sip.communicator.service.protocol.event.*;
 import net.java.sip.communicator.service.protocol.jabber.*;
@@ -202,11 +201,6 @@ public class JvbConference
      * Operation set telephony.
      */
     private OperationSetBasicTelephony telephony;
-
-    /**
-     * Operation set video telephhony.
-     */
-    private OperationSetVideoTelephony videoTelephony;
 
     /**
      * Object listens for incoming calls.
@@ -1462,7 +1456,7 @@ public class JvbConference
         properties.put(ProtocolProviderFactory.ENCRYPTION_PROTOCOL
             + ".DTLS-SRTP", "0");
         properties.put(ProtocolProviderFactory.ENCRYPTION_PROTOCOL_STATUS
-            + ".DTLS-SRTP", "false");
+            + ".DTLS-SRTP", "true");
 
         AbstractGateway gw = gatewaySession.getGateway();
         String overridePrefix = "org.jitsi.jigasi.xmpp.acc";
