@@ -2,7 +2,14 @@ package org.blaccspot;
 
 public class Console {
     public static void Log(String msg) {
-        msg = "[DEBUGLOG] " + msg;
+        if (!msg.contains("[")) {
+            msg = "["+msg+"]";
+        }
+        msg = "<l><d>[DEBUGLOG]</d>" +
+                msg.replace("[", "<type>")
+                .replace("]", "</type><xml>")
+                .trim() +
+                "</xml></l>";
         if (System.console() != null) {
             System.console().writer().println(msg);
         } else {
