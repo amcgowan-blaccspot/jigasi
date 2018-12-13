@@ -392,7 +392,7 @@ public class SipGatewaySession
             //}
 
             // Make an outgoing call
-            Console.Log("---This is where we actually start the outbound sip connection")
+            Console.Log("---This is where we actually start the outbound sip connection");
             final OperationSetBasicTelephony tele
                 = sipProvider.getOperationSet(
                         OperationSetBasicTelephony.class);
