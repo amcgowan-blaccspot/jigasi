@@ -43,7 +43,7 @@ public class CallManager
     public synchronized static void acceptCall(Call incomingCall)
     {
         threadPool.submit(
-            new AnswerCallThread(incomingCall, null, true));
+            new AnswerCallThread(incomingCall, null, false));
     }
 
     /**
