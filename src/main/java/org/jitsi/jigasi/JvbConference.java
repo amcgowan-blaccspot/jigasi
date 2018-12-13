@@ -147,7 +147,7 @@ public class JvbConference
             logger.info("ICE feature will not be advertised");
         }
 
-        Console.Log("Adding additional features");
+        /*Console.Log("Adding additional features");
         meetTools.addSupportedFeature("urn:xmpp:jingle:apps:rtp:1");
         meetTools.addSupportedFeature("urn:xmpp:jingle:apps:rtp:audio");
         meetTools.addSupportedFeature("urn:xmpp:jingle:apps:rtp:video");
@@ -160,7 +160,7 @@ public class JvbConference
         meetTools.addSupportedFeature("urn:xmpp:jingle:transports:dtls-sctp:1");
         meetTools.addSupportedFeature("urn:xmpp:rayo:client:1");
 
-        Console.Log("Finished with additional features");
+        Console.Log("Finished with additional features");*/
     }
 
     /**
@@ -202,7 +202,7 @@ public class JvbConference
     /**
      * The call established with JVB conference.
      */
-    private MediaAwareCall jvbCall;
+    private Call jvbCall;
 
     /**
      * Operation set telephony.
@@ -1302,15 +1302,13 @@ public class JvbConference
 
             inviteTimeout.cancel();
 
-
-            Console.Log("JVB call stuff");
-            jvbCall = (MediaAwareCall)event.getSourceCall();
+            jvbCall = event.getSourceCall();
             jvbCall.setData(CallContext.class, callContext);
 
             if(jvbCall != null)
             {
 
-                CallPeer peerToAdd = (MediaAwareCallPeer)jvbCall.getCallPeers().next();
+                CallPeer peerToAdd = jvbCall.getCallPeers().next();
                 if (peerToAdd != null)
                 {
                     peerToAdd.addCallPeerConferenceListener(JvbConference.this);
@@ -1345,7 +1343,7 @@ public class JvbConference
             videoTelephony.addVideoListener(peer, new JvbVideoListener());
             Console.Log("[IC] Video listener has been added");
             */
-            
+
             peer.addCallPeerListener(new CallPeerAdapter()
             {
                 @Override
@@ -1454,6 +1452,7 @@ public class JvbConference
         properties.put(ProtocolProviderFactory.DEFAULT_ENCRYPTION, "true");
         properties.put(ProtocolProviderFactory.DEFAULT_SIPZRTP_ATTRIBUTE,
             "false");
+
         properties.put(ProtocolProviderFactory.IS_USE_ICE, "true");
         properties.put(ProtocolProviderFactory.IS_ACCOUNT_DISABLED, "false");
         properties.put(ProtocolProviderFactory.IS_PREFERRED_PROTOCOL, "false");
@@ -1466,7 +1465,7 @@ public class JvbConference
         properties.put(ProtocolProviderFactory.ENCRYPTION_PROTOCOL
             + ".DTLS-SRTP", "0");
         properties.put(ProtocolProviderFactory.ENCRYPTION_PROTOCOL_STATUS
-            + ".DTLS-SRTP", "true");
+            + ".DTLS-SRTP", "false");
 
         AbstractGateway gw = gatewaySession.getGateway();
         String overridePrefix = "org.jitsi.jigasi.xmpp.acc";
