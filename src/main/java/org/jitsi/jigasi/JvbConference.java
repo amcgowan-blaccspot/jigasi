@@ -1067,7 +1067,7 @@ public class JvbConference
                     Console.Log("NotifyChanged");
                     gatewaySession.notifyChatRoomMemberUpdated(member, presence);
 
-                    Console.Log("Sending something to do with recording.");
+                    Console.Log("Checking if we have to do something with recording.");
                     RecordingStatus rs = presence.getExtension(
                         RecordingStatus.ELEMENT_NAME,
                         RecordingStatus.NAMESPACE);
@@ -1084,7 +1084,7 @@ public class JvbConference
 
 
             }
-
+            Console.Log("Done withh member pres changed");
             return;
         }
         else
@@ -1209,7 +1209,7 @@ public class JvbConference
                         Console.Log("Session ID changed");
                         if (!isVideoThingsAttempted) {
                             isVideoThingsAttempted = true;
-                            this.doVideoThings(this.myJid, this.focusJid, this.sessionId);
+                            //this.doVideoThings(this.myJid, this.focusJid, this.sessionId);
                         }
                     }
 
@@ -1634,7 +1634,7 @@ public class JvbConference
                 + " Please set DOMAIN_BASE to the sip account.");
             return;
         }
-
+        Console.Log("Focus invite");
         ConferenceIq focusInviteIQ = new ConferenceIq(roomIdentifier);
 
         // FIXME: uses hardcoded values that are currently used in production

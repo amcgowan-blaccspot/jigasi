@@ -325,7 +325,7 @@ public class CallControlComponent
             {
                 if (smackIq instanceof DialIq)
                 {
-                    Console.Log("Starting call");
+                    Console.Log("--------Starting call");
                     resultIQ = callControl.handleDialIq((DialIq)smackIq, ctx,
                         null);
                 }

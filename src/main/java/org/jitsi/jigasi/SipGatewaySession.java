@@ -392,6 +392,7 @@ public class SipGatewaySession
             //}
 
             // Make an outgoing call
+            Console.Log("---This is where we actually start the outbound sip connection")
             final OperationSetBasicTelephony tele
                 = sipProvider.getOperationSet(
                         OperationSetBasicTelephony.class);
@@ -494,6 +495,7 @@ public class SipGatewaySession
     {
         if (jvbConference != null)
         {
+            Console.Log("Presence being sent as extension");
             jvbConference.sendPresenceExtension(extension);
         }
         else
@@ -540,6 +542,7 @@ public class SipGatewaySession
                     .getAccountPropertyString(
                         CallContext.MUC_DOMAIN_PREFIX_PROP, "conference"));
 
+                Console.Log("Join jitsi meet conference");
                 joinJvbConference(callContext);
             }
         }
@@ -662,6 +665,7 @@ public class SipGatewaySession
                 MediaStream stream = mediaHandler.getStream(MediaType.AUDIO);
                 if (stream != null)
                 {
+                    Console.Log("We are transforming stream");
                     stream.setExternalTransformer(
                         new SsrcRewriter(stream.getLocalSourceID()));
                     return true;
@@ -762,7 +766,7 @@ public class SipGatewaySession
 
                 //jvbConference.setPresenceStatus(
                   //  SipGatewayExtension.STATE_IN_PROGRESS);
-
+                Console.Log("Call started - media format: " +  Util.getFirstPeerMediaFormat(call));
                 logger.info("SIP call format used: "
                                 + Util.getFirstPeerMediaFormat(call));
             }
@@ -915,6 +919,7 @@ public class SipGatewaySession
                                     "Using default JVB room name property "
                                             + defaultRoom);
 
+                            Console.Log("Setting room name");
                             callContext.setRoomName(defaultRoom);
 
                             joinJvbConference(callContext);
